@@ -14,19 +14,6 @@ dic_precedencia = {
 
 print(f'operadores aceitos: {operadores_aceitos}')
 
-#entrada da expressão a ser resolvida
-def entrada():
-    expressao = input('>> ')
-
-#removendo espaços da expressão
-def preparar_expr(expressao):
-    expressao = expressao.split()
-    expressao = ''.join(expressao)
-
-def panic():
-    pass
-    #parar caso encontre um erro
-
 #TOKENIZADOR / LEXER
 
 #lexer
@@ -83,14 +70,14 @@ dic_precedencia = {
     '**': 3
 }
 '''
-def rpn (tokens:list) -> list: #sem considerar parenteses e sem validar expressão
+def npf (tokens:list) -> list: #sem considerar parenteses e sem validar expressão
 
-    rpn = []
+    npf = []
     pilha = []
 
     for i in range(len(tokens)):
         if tokens[i] not in operadores_aceitos:
-            rpn.append(tokens[i])
+            npf.append(tokens[i])
         elif tokens[i] in operadores_aceitos:
             #print(dic_precedencia[tokens[i]])
             if pilha==[]:
@@ -100,29 +87,17 @@ def rpn (tokens:list) -> list: #sem considerar parenteses e sem validar express�
                     pilha.append(tokens[i])
                 elif dic_precedencia[tokens[i]] <= dic_precedencia[pilha[len(pilha)-1]]: #pq tirando esse elif e deixando só o while não dá certo?
                     while pilha!=[] and dic_precedencia[tokens[i]] <= dic_precedencia[pilha[len(pilha)-1]]:
-                        rpn.append(pilha.pop())
+                        npf.append(pilha.pop())
                     pilha.append(tokens[i])
 
         while i == len(tokens)-1 and pilha!=[]:
-            rpn.append(pilha.pop())
+            npf.append(pilha.pop())
         #print(rpn, pilha)
 
-    return rpn
+    return npf
 
-print(rpn(['90', '**', '90', '+', '2', '/', '720', '**', '80']))
-print(rpn(tokenizar('90**90+2/720**80')))
-
-'''notacao infixa
-90 + 90
-p ^ q
-
-notacao posfixa
-90 90 +
-p q ^
-
-90 + 90 * 2
-90 90 2 * +
-'''
+print(npf(['90', '**', '90', '+', '2', '/', '720', '**', '80']))
+print(npf(tokenizar('90**90+2/720**80')))
 
 def rpn2 (tokens:list, aux=['(',')']) -> list: #considerando parenteses e não sei se vai ter validação ou não
 
@@ -168,7 +143,7 @@ e se
 muitos casos
 '''
 
-def resolver_rpn(rpn):
-    for i in rpn:
+def resolver_npf(npf):
+    for i in npf:
         pass
     return
