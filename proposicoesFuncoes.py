@@ -76,6 +76,8 @@ print(tokenizar('p <> q'))
 print(tokenizar('p ^ -%--> q'))
 print(tokenizar('p 0 q'))
 
+#______________________________________________________________________#
+
 #validador geral, menos sobre pareamento de parenteses
 #primeiro pode ser -, parenteses abrindo ou proposição
 #nao pode ter um parenteses abrindo e logo apos um fechando () par vazio
@@ -83,20 +85,31 @@ print(tokenizar('p 0 q'))
 #pode parenteses com só um operando? tipo p ^ (q) ? acho que sim né
 #se for parenteses abrindo, o proximo nao pode ser operador, deve ser proposição ou - ou parenteses abrindo
 #se for parenteses fechando, o proximo
+
 def validar(tokens:list, operadores=['-', '^', '+', '-->', '<-->']) -> bool:
     #provavelmente vai ser bem redundante
-    if tokens[0]==')' or (tokens[0] in operadores and tokens[0]!='-'):
+    if tokens[0] == ')' or (tokens[0] in operadores and tokens[0] != '-'):
         return False
-    if tokens[-1]=='(' or tokens[-1] in operadores: #posso fazer isso de outras formas tbm
+
+    if tokens[-1] == '(' or tokens[-1] in operadores: #posso fazer isso de outras formas tbm
         return False
+
     for i in range(len(tokens)):
-        if tokens[i]=='(' and i>len(tokens)-1:
-            if tokens[i+1] in operadores or tokens[i+1]==')':
+        if tokens[i]=='(' and i < len(tokens)-1:
+            if tokens[i+1] == ')' or (tokens[i+1] in operadores and tokens[i+1] != '-'):
                 return False
-            else:
-                pass
-        elif tokens[i]==')':
-            pass
+        # o que não pode aparecer após o ")" é:
+        #outra variável, um parentese abrindo e uma negação
+        # o que pode é:
+        # outro ")" e operadores diferentes de negação
+        elif tokens[i]==')' and if i < len(tokens) - 1:
+                if tokens[i+1] == '(' or tokens[i+1] == '-' or (tokens[i+1] not in operadores and tokens[i+1] != ')' ):
+                    return False
+
+    return True
+
+
+#______________________________________________________________#
 
 
 #rpn (com parenteses e tudo + validação do pareamento de parenteses)
