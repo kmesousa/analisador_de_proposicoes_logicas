@@ -1,6 +1,6 @@
-#DICIONARIOS OPERADORES
+#DICIONARIOS DOS OPERADORES
 
-dic_simbolos ={
+dic_simbolos = {
     'não': '-',
     'e': '^',
     'ou': '/',
