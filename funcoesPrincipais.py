@@ -127,10 +127,6 @@ def extrair_variaveis(posfixos) -> list:
             variaveis[i] = ''
     return list(variaveis.keys())
 
-print(extrair_variaveis(posfixar(tokenizar('- (p ^ q) --> q'))))
-print(extrair_variaveis(posfixar(tokenizar('-chove ^ tenho vontade de sair --> vou sair'))))
-print(extrair_variaveis(posfixar(tokenizar('- (p ^ q) --> q'))))
-
 def gerar_combinacoes(variaveis):
 
     #crinando a lista com dicionários vazios para cada combinação

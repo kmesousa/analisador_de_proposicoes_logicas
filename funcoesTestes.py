@@ -21,6 +21,11 @@ print(posfixar(tokenizar('- p ^ q --> q')))
 print(posfixar(tokenizar('- (p ^ q) --> q')))
 print(posfixar(tokenizar('- p ^ (q --> q)')))
 
+#-------------- extrair variáveis ----------------------
+print(extrair_variaveis(posfixar(tokenizar('- (p ^ q) --> q'))))
+print(extrair_variaveis(posfixar(tokenizar('-chove ^ tenho vontade de sair --> vou sair'))))
+print(extrair_variaveis(posfixar(tokenizar('- (p ^ q) --> q'))))
+
 #------------ combinacoes e quadro ------------------------
 quadro_combinacoes(gerar_combinacoes(extrair_variaveis(posfixar(tokenizar('- (p ^ q) --> q')))))
 quadro_combinacoes(gerar_combinacoes(extrair_variaveis(posfixar(tokenizar('- (p ^ q) --> q')))))
