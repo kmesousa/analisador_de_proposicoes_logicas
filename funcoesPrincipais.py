@@ -1,5 +1,5 @@
 # ------------------- transformando a string em tokens ------------------------------
-operadores = ['-', '^', '+', '-->', '<-->']
+operadores = ['-', '^', '/', '-->', '<-->']
 
 def tokenizar(proposicao:str) -> list:
 
@@ -42,7 +42,7 @@ def tokenizar(proposicao:str) -> list:
                         i+=1
                         k+=1
         else: #identificar tokens que não são proposições, operadores nem auxiliadores
-            return f'bad token: {proposicao[i]} at index {i}'
+            return False, f'bad token: {proposicao[i]} at index {i}'
 
         i += 1
         if pilha!=[' ']:
@@ -59,18 +59,18 @@ pode parenteses com só um operando? tipo p ^ (q) ? acho que sim né
 se for parenteses abrindo, o proximo nao pode ser operador, deve ser proposição ou - ou parenteses abrindo
 se for parenteses fechando, o proximo'''
 def validar(tokens:list, operadores=['-', '^', '+', '-->', '<-->']) -> bool:
-    #provavelmente vai ser bem redundante
-    if tokens[0]==')' or (tokens[0] in operadores and tokens[0]!='-'):
-        return False
-    if tokens[-1]=='(' or tokens[-1] in operadores: #posso fazer isso de outras formas tbm
-        return False
+
+    aux=['(',')']
+    char_operadores = ''.join(operadores)
+
     for i in range(len(tokens)):
-        if tokens[i]=='(' and i>len(tokens)-1:
-            if tokens[i+1] in operadores or tokens[i+1]==')':
-                return False
-            else:
-                pass
-        elif tokens[i]==')':
+        if tokens[i][0] in char_operadores and tokens[i] not in operadores:
+            return False
+        if tokens[i] not in operadores:
+            pass
+        elif tokens[i] in operadores:
+            pass
+        elif tokens[i] in aux:
             pass
 
 # ------------------- transformando tokens válidos em notação pos-fixa --------------------
@@ -160,28 +160,135 @@ def quadro_combinacoes(combinacoes):
         print(c)
 
 #--------------- resolução da expressão com os valores dados nas combinações ------------------
-def resolver_linha(posfixas) -> bool:
-    result = 0
-    return result
 
+dic_simbolos = {
+    'não': '-',
+    'e': '^',
+    'ou': '/',
+    'se, então': '-->',
+    'se, e somente se': '<-->'
+}
+
+dic_sign = {
+    dic_simbolos['não']: 'não',
+    dic_simbolos['e']: 'e',
+    dic_simbolos['ou']: 'ou',
+    dic_simbolos['se, então']: 'se, então',
+    dic_simbolos['se, e somente se']: 'se, e somente se'
+}
+
+dic_funcoes = {
+    dic_simbolos['não']: lambda rhs : not rhs,
+    dic_simbolos['e']: lambda lhs, rhs: lhs and rhs,
+    dic_simbolos['ou']: lambda lhs, rhs: lhs or rhs,
+    dic_simbolos['se, então']: lambda lhs, rhs: (lhs and rhs) or not rhs,
+    dic_simbolos['se, e somente se']: lambda lhs, rhs: lhs and rhs or (not lhs and not rhs)
+}
+
+dic_aridade = {
+    dic_simbolos['não']: 1,
+    dic_simbolos['e']: 2,
+    dic_simbolos['ou']: 2,
+    dic_simbolos['se, então']:2,
+    dic_simbolos['se, e somente se']:2
+}
 
 def resolver(posfixas):
-    pass
-    #- p ^ q >>>>  p - q ^ >>> not p and q
-    #-(p ^ q) >>>  p q ^ - >>> not (p and q)
-    #acho q isso é mais difícil de fazer, n sei agora ahhhhh
 
-    #p - q ^
-    '''
+    variavies = extrair_variaveis(posfixas)
+    combinacoes = gerar_combinacoes(variavies)
+
+    tautologia = True
+    contradicao = True
+
+    pilha = []
+    resultado = []
+
     for c in combinacoes:
-        for i in range(posfixas)
-            if i in variaveis:
-                i = gerar_combinacoes[i]
-            elif i in operadores:
+        pilha = []
+        for i in range(len(posfixas)):
+            if posfixas[i] in variavies:
+                pilha.append(c[posfixas[i]])
+            elif posfixas[i] in operadores:
+                if dic_aridade[posfixas[i]]==2:
+                    lhs = pilha.pop()
+                    rhs = pilha.pop()
+                match dic_sign[posfixas[i]]:
+                    case 'não':
+                        r = dic_funcoes[dic_simbolos['não']](pilha.pop())
+                        pilha.append(r)
+                    case 'e':
+                        r = dic_funcoes[dic_simbolos['e']](lhs, rhs)
+                        pilha.append(r)
+                    case 'ou':
+                        r = dic_funcoes[dic_simbolos['ou']](lhs,rhs)
+                        pilha.append(r)
+                    case 'se, então':
+                        r = dic_funcoes[dic_simbolos['se, então']](lhs,rhs)
+                        pilha.append(r)
+                    case 'se, e somente se':
+                        r = dic_funcoes[dic_simbolos['se, e somente se']](lhs,rhs)
+                        pilha.append(r)
+        resultado.extend(pilha)
+
+        if pilha[0]==False:
+            tautologia=False
+            classificacao = 'contradição'
+        if pilha[0]==True:
+            contradicao=False
+            classificacao = 'tautologia'
+    if not (contradicao or tautologia):
+        classificacao = 'contingencia'
+
+    return resultado, classificacao
     '''
 
-def classificar():
-    pass
+    - p ^ q --> q
+    p - q ^ q -->
+    p = T, q = T
+
+    p = lhs = False
+    - = False
+
+    q = rhs = True
+    (p) pilha = lhs = False
+    ^ = False
+
+    q = rhs = True
+    (-p ^q) pilha = lhs = False
+    --> = False
+
+
+    -p ^ -q --> q
+    p - q - ^ q -->
+
+    -
+    lhs = p
+    - = False
+    pilha = [False]
+
+    - lhs = q
+    - = False
+    pilha = [False, False]
+
+    - (-p --> -q)
+    p - q - --> -
+
+    False
+
+    p --> q ^ r
+    p q r ^ -->
+    True
+
+    '''
+
+print(resolver(posfixar(tokenizar('-p ^ -q'))))
+print(resolver(posfixar(tokenizar('p ^ q'))))
+print(resolver(posfixar(tokenizar('-p'))))
+print(resolver(posfixar(tokenizar('p / -p'))))
+print(resolver(posfixar(tokenizar('p-->q'))))
+print(resolver(posfixar(tokenizar('p<--> q'))))
+print(resolver(posfixar(tokenizar('p ^ -p'))))
 
 def tabela():
     pass
