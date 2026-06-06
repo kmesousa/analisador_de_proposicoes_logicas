@@ -20,6 +20,7 @@ print(tokenizar('p <--> q ^ q <-- q'))
 print(posfixar(tokenizar('- p ^ q --> q')))
 print(posfixar(tokenizar('- (p ^ q) --> q')))
 print(posfixar(tokenizar('- p ^ (q --> q)')))
+print(posfixar(tokenizar('-p ^ -q --> q')))
 
 #-------------- extrair variáveis ----------------------
 print(extrair_variaveis(posfixar(tokenizar('- (p ^ q) --> q'))))

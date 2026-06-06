@@ -4,7 +4,7 @@ dic_simbolos = {
     'não': '-',
     'e': '^',
     'ou': '/',
-    'se, então': '->',
+    'se, então': '-->',
     'se, e somente se': '<-->'
 }
 
@@ -26,8 +26,37 @@ dic_aridade = {
 
 dic_funcoes = {
     dic_simbolos['não']: lambda rhs : not rhs,
-    dic_simbolos['e']: lambda lhs, rhs: lhs and rhs
+    dic_simbolos['e']: lambda lhs, rhs: lhs and rhs,
+    dic_simbolos['ou']: lambda lhs, rhs: lhs or rhs,
+    dic_simbolos['se, então']: lambda lhs, rhs: lhs and rhs or not rhs,
+    dic_simbolos['se, e somente se']: lambda lhs, rhs: lhs and rhs or not lhs and not rhs
 }
+
+'''
+p  q   p -> q
+T  T    T
+T  F    T
+F  T    F
+F  F    T
+
+p and q or not q
+
+p  q    p <--> q
+T  T      T
+T  F      F
+F  T      F
+F  F      T
+
+p and q or not p and not q
+p and q or not (p or q)
+'''
+
+print('oi', dic_funcoes[dic_simbolos['não']](True))
+print('oi', dic_funcoes[dic_simbolos['se, então']](True, False))
+print('oi', dic_funcoes[dic_simbolos['se, então']](False, False))
+print('oi', dic_funcoes[dic_simbolos['se, então']](False, True))
+
+
 
 # nao = lambda rhs : not rhs
 # e = lambda lhs, rhs: lhs and rhs
@@ -38,13 +67,13 @@ for i in dic_simbolos:
 operadores = list(dic_simbolos.values())
 print(operadores)
 
-def refazer_dic_simbolos(dic):
-    for i in dic:
-        v = input(f'{i}:')
-        i = v
-    print(dic)
-    return dic
+# def refazer_dic_simbolos(dic):
+#     for i in dic:
+#         v = input(f'{i}:')
+#         i = v
+#     print(dic)
+#     return dic
 
-new = refazer_dic_simbolos(dic_simbolos)
+# new = refazer_dic_simbolos(dic_simbolos)
 
-print(new)
+# print(new)
