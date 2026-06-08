@@ -83,7 +83,6 @@ resultado (propposição valida)
 p ^ -p                    classificação: CONTRADIÇÃO
 ----------------------------------------------------
 p | -p | p ^ -p
----------------
 T |  F |   F
 F |  T |   F
 
@@ -92,7 +91,6 @@ F |  T |   F
 (p ^ q) / - q --> p       classificação: CONTRADIÇÃO
 ----------------------------------------------------
 p | -p | p ^ -p
----------------
 T |  F |   F
 F |  T |   F
 
@@ -102,9 +100,6 @@ F |  T |   F
 classificação: CONTINGENCIA
 ----------------------------------------------------
 chove | quero sair | vou sair |-c ^ q |-c ^ q <--> v
-123456
-      |
-----------------------------------------------------
   T   |     T      |     T    |   F   |      F
   T   |     T      |     F    |   F   |      T
   T   |     F      |     T    |   F   |      F
@@ -120,15 +115,14 @@ amo meus pais ^ tenho dinheiro --> comprar um presente para meus pais
 classificação: CONTINGENCIA
 ---------------------------------------------------------------------------------
 amo meus pais | tenho dinheiro | comprar um presente para meus pais | a ^ t --> c
----------------------------------------------------------------------------------
-    T       |       T           |               T                   |       F
-    T       |       T           |               F                   |       T
-    T       |       F           |               T                   |       F
-    T       |       F           |               F                   |       T
-    F       |       T           |               T                   |       T
-    F       |       T           |               F                   |       F
-    F       |       F           |               T                   |       F
-    F       |       F           |               F                   |       T
+      T       |       T        |               T                    |       F
+      T       |       T        |               F                    |       T
+      T       |       F        |               T                    |       F
+      T       |       F        |               F                    |       T
+      F       |       T        |               T                    |       T
+      F       |       T        |               F                    |       F
+      F       |       F        |               T                    |       F
+      F       |       F        |               F                    |       T
 
 ou (acho que é melhor fazer assim, eh(se tiver duas com o msm nome bota a, a1, a2, etc...))
 ---------------------------------------------------------------------------------
@@ -154,3 +148,17 @@ e o tamanho das próximas linhas com os valores
 
 print(len('chove |'))
 print(len('      |')) #ebaa
+print(f'oi'.center(50))
+
+variaveis = ['p','q']
+header = f'| {variaveis[0]} |'
+print(header)
+dados = {'p': [True, False], 'q': [True, False]}
+match dados[variaveis[0]][0]:
+    case True:
+        valor = 'V'
+    case False:
+        valor ='F'
+  
+print('|',valor.center(len(header)-4),'|')
+print(f'| {valor.center(len(header)-4)} |')

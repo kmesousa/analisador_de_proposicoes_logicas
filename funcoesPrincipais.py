@@ -193,6 +193,8 @@ dic_aridade = {
     dic_simbolos['se, e somente se']:2
 }
 
+#from dicsOperadores import dic_aridade, dic_funcoes, dic_precedencia, dic_simbolos não entendo pq isso n funciona, mas pensarei sobre dps aa
+
 def resolver(posfixas):
 
     variavies = extrair_variaveis(posfixas)
@@ -243,5 +245,59 @@ def tabela_beta(resolver):
         print(i, resolver[0][i])
     print(resolver[1])
 
-def tabela():
-    pass
+def tabela(posfixos):
+
+    dados = resolver(posfixos)[0]
+    classificacao = resolver(posfixos)[1]
+
+    variaveis = extrair_variaveis(posfixos)
+
+    for i in range(len(variaveis)): #colunas das variáveis
+        header = f'| {variaveis[i]} |'
+        print(header)
+        for j in range(len(dados[variaveis[i]])): #linhas das variáveis
+            match dados[variaveis[i]][j]:
+                case True:
+                    valor = 'V'
+                case False:
+                    valor ='F'
+            print(f'| {valor.center(len(header)-4)} |')
+
+    for i in range(len(list(dados.keys()))): #colunas das subexpressao e resultado final
+        if list(dados.keys())[i] in variaveis:
+            pass
+        else:
+            pass
+        #KAMILY COMO TU QUER IMPRIMIR COLUNA POR COLUNA BURRA
+
+tabela(posfixar(tokenizar('p ^ q')))
+
+'''
+p [True, False]
+- p [False, True]
+p ^ - p [False, False]
+contradição
+
+variaveis
+variáveis combinações
+
+=========== GERADOR DE TABELAS VERDADE =============
+----------------------------------------------------
+p ^ -p                    classificação: CONTRADIÇÃO
+----------------------------------------------------
+p | -p | p ^ -p
+T |  F |   F
+F |  T |   F
+
+2. soma dos tamanhos das variáveis + | + espaços + proposição final (+ subs, caso fosse ter elas)
+
+3. a primeira linha
+(variavel1 + espaço + traço + espaço + variável 2 + espaço + traço + espaço+ proposição)
+
+usar esse o tamanho disso tudo para determinar o tamanho nas linhas -----
+e o tamanho das próximas linhas com os valores
+
+4. formar as outras linhas obedecendos os espaços estabelecidos na primeira
+
+'''
+#mds

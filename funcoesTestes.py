@@ -37,9 +37,13 @@ print(gerar_combinacoes(extrair_variaveis(posfixar(tokenizar('- (p ^ q) --> q'))
 tabela_beta(resolver(posfixar(tokenizar('-p ^ -q'))))
 tabela_beta(resolver(posfixar(tokenizar('p ^ q'))))
 tabela_beta(resolver(posfixar(tokenizar('-p'))))
-tabela_beta(resolver(posfixar(tokenizar('p / -p')))) #p tem mais linhas doq devia
+tabela_beta(resolver(posfixar(tokenizar('p / -p'))))
 tabela_beta(resolver(posfixar(tokenizar('p-->q'))))
 tabela_beta(resolver(posfixar(tokenizar('p<--> q'))))
-tabela_beta(resolver(posfixar(tokenizar('p ^ -p')))) #p tem mais linhas doq devia
-tabela_beta(resolver(posfixar(tokenizar('p ^ -p --> -p ^ -p')))) #era pra ter só duas linhas, mas tem mt mais q isso, como corrigir?
-tabela_beta(resolver(posfixar(tokenizar('p ^ -q --> -p ^q')))) #as linhas da tabela estão completamente erradas, aaa #pronto :)
+tabela_beta(resolver(posfixar(tokenizar('p ^ -p'))))
+tabela_beta(resolver(posfixar(tokenizar('p ^ -p --> q'))))
+tabela_beta(resolver(posfixar(tokenizar('p ^ -p --> -p ^ -p'))))
+tabela_beta(resolver(posfixar(tokenizar('p ^ -q --> -p ^q'))))
+tabela_beta(resolver(posfixar(tokenizar('-chove ^ tenho vontade de sair --> vou sair'))))
+
+#---------------- tabela completa final -----------------------------------
