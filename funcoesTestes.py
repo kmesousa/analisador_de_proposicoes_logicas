@@ -1,6 +1,7 @@
 from funcoesPrincipais import tokenizar, posfixar, extrair_variaveis, gerar_combinacoes, quadro_combinacoes
 
 #-------------- testes tokenizar --------------------------------
+# TEM MTS ERROS COM O TOKENIZADOR TENHO Q CORRIGIR!!!!!!!!!!!
 print(tokenizar('não chove ^ tenho vontade de sair --> vou sair'))
 print(tokenizar('-chove ^ tenho vontade de sair --> vou sair'))
 print(tokenizar('-(p ^ q) ^ -q'))
@@ -30,3 +31,6 @@ print(extrair_variaveis(posfixar(tokenizar('- (p ^ q) --> q'))))
 #------------ combinacoes e quadro ------------------------
 quadro_combinacoes(gerar_combinacoes(extrair_variaveis(posfixar(tokenizar('- (p ^ q) --> q')))))
 quadro_combinacoes(gerar_combinacoes(extrair_variaveis(posfixar(tokenizar('- (p ^ q) --> q')))))
+print(gerar_combinacoes(extrair_variaveis(posfixar(tokenizar('- (p ^ q) --> q')))))
+
+#------------- resolução ------------------------------------

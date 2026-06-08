@@ -9,7 +9,11 @@ etapas do programa
     pronta
 5. combinacoes
     pronta
-5. avaliação, tabelas e classificação
+5. avaliação e classificação
+    pronto
+7. subexpressoes
+    falta fazer
+8. tabelas
     falta fazer
 
 ## como fazer a resolução

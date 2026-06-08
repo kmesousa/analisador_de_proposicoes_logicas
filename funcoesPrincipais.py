@@ -153,7 +153,7 @@ def gerar_combinacoes(variaveis):
             inicio_bloco = fim_bloco
             fim_bloco += qte_combinacoes//blocos
     return combinacoes
-
+    #[{'p': True, 'q': True}, {'p': True, 'q': False}, {'p': False, 'q': True}, {'p': False, 'q': False}]
 
 def quadro_combinacoes(combinacoes):
     for c in combinacoes:
@@ -181,7 +181,7 @@ dic_funcoes = {
     dic_simbolos['não']: lambda rhs : not rhs,
     dic_simbolos['e']: lambda lhs, rhs: lhs and rhs,
     dic_simbolos['ou']: lambda lhs, rhs: lhs or rhs,
-    dic_simbolos['se, então']: lambda lhs, rhs: (lhs and rhs) or not rhs,
+    dic_simbolos['se, então']: lambda lhs, rhs: (lhs and rhs) or not lhs,
     dic_simbolos['se, e somente se']: lambda lhs, rhs: lhs and rhs or (not lhs and not rhs)
 }
 
@@ -202,93 +202,52 @@ def resolver(posfixas):
     contradicao = True
 
     pilha = []
-    resultado = []
+    tabela = {}
 
-    for c in combinacoes:
+    for c in range(len(combinacoes)):
         pilha = []
         for i in range(len(posfixas)):
             if posfixas[i] in variavies:
-                pilha.append(c[posfixas[i]])
+                expressao = posfixas[i]
+                valor = combinacoes[c][posfixas[i]]
             elif posfixas[i] in operadores:
-                if dic_aridade[posfixas[i]]==2:
-                    lhs = pilha.pop()
+                if dic_aridade[posfixas[i]]==1:
+                    op = pilha.pop()
+                    expressao = f'{posfixas[i]} {op[0]}'
+                    valor = dic_funcoes[posfixas[i]](op[1])
+                else:
                     rhs = pilha.pop()
-                match dic_sign[posfixas[i]]:
-                    case 'não':
-                        r = dic_funcoes[dic_simbolos['não']](pilha.pop())
-                        pilha.append(r)
-                    case 'e':
-                        r = dic_funcoes[dic_simbolos['e']](lhs, rhs)
-                        pilha.append(r)
-                    case 'ou':
-                        r = dic_funcoes[dic_simbolos['ou']](lhs,rhs)
-                        pilha.append(r)
-                    case 'se, então':
-                        r = dic_funcoes[dic_simbolos['se, então']](lhs,rhs)
-                        pilha.append(r)
-                    case 'se, e somente se':
-                        r = dic_funcoes[dic_simbolos['se, e somente se']](lhs,rhs)
-                        pilha.append(r)
-        resultado.extend(pilha)
+                    lhs = pilha.pop()
+                    expressao = f'{lhs[0]} {posfixas[i]} {rhs[0]}'
+                    valor = dic_funcoes[posfixas[i]](lhs[1],rhs[1])
+            pilha.append((expressao, valor))
 
-        if pilha[0]==False:
+            if expressao not in tabela:
+                tabela[expressao] = []
+            if c+1 > len(tabela[expressao]): #adicionar apenas 1 valor por combinanação a cada variável ou subexpressao
+                tabela[expressao].append(valor)
+
+        if tabela[expressao][-1]==False:
             tautologia=False
             classificacao = 'contradição'
-        if pilha[0]==True:
+        if tabela[expressao][-1]==True:
             contradicao=False
             classificacao = 'tautologia'
     if not (contradicao or tautologia):
-        classificacao = 'contingencia'
+        classificacao = 'contingência'
 
-    return resultado, classificacao
-    '''
-
-    - p ^ q --> q
-    p - q ^ q -->
-    p = T, q = T
-
-    p = lhs = False
-    - = False
-
-    q = rhs = True
-    (p) pilha = lhs = False
-    ^ = False
-
-    q = rhs = True
-    (-p ^q) pilha = lhs = False
-    --> = False
-
-
-    -p ^ -q --> q
-    p - q - ^ q -->
-
-    -
-    lhs = p
-    - = False
-    pilha = [False]
-
-    - lhs = q
-    - = False
-    pilha = [False, False]
-
-    - (-p --> -q)
-    p - q - --> -
-
-    False
-
-    p --> q ^ r
-    p q r ^ -->
-    True
-
-    '''
+    return tabela, classificacao
 
 print(resolver(posfixar(tokenizar('-p ^ -q'))))
 print(resolver(posfixar(tokenizar('p ^ q'))))
 print(resolver(posfixar(tokenizar('-p'))))
-print(resolver(posfixar(tokenizar('p / -p'))))
+print(resolver(posfixar(tokenizar('p / -p')))) #p tem mais linhas doq devia
 print(resolver(posfixar(tokenizar('p-->q'))))
 print(resolver(posfixar(tokenizar('p<--> q'))))
-print(resolver(posfixar(tokenizar('p ^ -p'))))
+print(resolver(posfixar(tokenizar('p ^ -p')))) #p tem mais linhas doq devia
+print(resolver(posfixar(tokenizar('p ^ -p --> -p ^ -p')))) #era pra ter só duas linhas, mas tem mt mais q isso, como corrigir?
+print(resolver(posfixar(tokenizar('p ^ -q --> -p ^q')))) #as linhas da tabela estão completamente erradas, aaa #pronto :)
+
 
 def tabela():
     pass
