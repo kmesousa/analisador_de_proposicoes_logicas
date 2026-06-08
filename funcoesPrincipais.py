@@ -238,16 +238,10 @@ def resolver(posfixas):
 
     return tabela, classificacao
 
-print(resolver(posfixar(tokenizar('-p ^ -q'))))
-print(resolver(posfixar(tokenizar('p ^ q'))))
-print(resolver(posfixar(tokenizar('-p'))))
-print(resolver(posfixar(tokenizar('p / -p')))) #p tem mais linhas doq devia
-print(resolver(posfixar(tokenizar('p-->q'))))
-print(resolver(posfixar(tokenizar('p<--> q'))))
-print(resolver(posfixar(tokenizar('p ^ -p')))) #p tem mais linhas doq devia
-print(resolver(posfixar(tokenizar('p ^ -p --> -p ^ -p')))) #era pra ter só duas linhas, mas tem mt mais q isso, como corrigir?
-print(resolver(posfixar(tokenizar('p ^ -q --> -p ^q')))) #as linhas da tabela estão completamente erradas, aaa #pronto :)
-
+def tabela_beta(resolver):
+    for i in resolver[0]:
+        print(i, resolver[0][i])
+    print(resolver[1])
 
 def tabela():
     pass

@@ -1,4 +1,4 @@
-from funcoesPrincipais import tokenizar, posfixar, extrair_variaveis, gerar_combinacoes, quadro_combinacoes
+from funcoesPrincipais import tokenizar, posfixar, extrair_variaveis, gerar_combinacoes, quadro_combinacoes, resolver, tabela_beta
 
 #-------------- testes tokenizar --------------------------------
 # TEM MTS ERROS COM O TOKENIZADOR TENHO Q CORRIGIR!!!!!!!!!!!
@@ -34,3 +34,12 @@ quadro_combinacoes(gerar_combinacoes(extrair_variaveis(posfixar(tokenizar('- (p 
 print(gerar_combinacoes(extrair_variaveis(posfixar(tokenizar('- (p ^ q) --> q')))))
 
 #------------- resolução ------------------------------------
+tabela_beta(resolver(posfixar(tokenizar('-p ^ -q'))))
+tabela_beta(resolver(posfixar(tokenizar('p ^ q'))))
+tabela_beta(resolver(posfixar(tokenizar('-p'))))
+tabela_beta(resolver(posfixar(tokenizar('p / -p')))) #p tem mais linhas doq devia
+tabela_beta(resolver(posfixar(tokenizar('p-->q'))))
+tabela_beta(resolver(posfixar(tokenizar('p<--> q'))))
+tabela_beta(resolver(posfixar(tokenizar('p ^ -p')))) #p tem mais linhas doq devia
+tabela_beta(resolver(posfixar(tokenizar('p ^ -p --> -p ^ -p')))) #era pra ter só duas linhas, mas tem mt mais q isso, como corrigir?
+tabela_beta(resolver(posfixar(tokenizar('p ^ -q --> -p ^q')))) #as linhas da tabela estão completamente erradas, aaa #pronto :)
