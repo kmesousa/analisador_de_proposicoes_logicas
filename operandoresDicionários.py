@@ -1,3 +1,4 @@
+
 #DICIONARIOS OPERADORES
 
 dic_simbolos ={
