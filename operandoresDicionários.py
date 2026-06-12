@@ -8,8 +8,6 @@ dic_simbolos ={
     'se, então': '->',
     'se, e somente se': '<-->'
 }
-print(dic_simbolos['não'])
-print(list(dic_simbolos.values()))
 
 #como fazer pra se atualizar com os simbolos tbm?
 dic_funcoes = {
@@ -37,23 +35,14 @@ dic_aridade = {
 for i in dic_simbolos:
     print(f'{i}: {dic_simbolos[i]}')
 
+print()
 operadores = list(dic_simbolos.values())
 print(operadores)
 
-def refazer_dic_simbolos(dic):
-    for i in dic:
-        v = input(f'{i}:')
-        i = v
-    print(dic)
-    return dic
+print()
 
-new = refazer_dic_simbolos(dic_simbolos)
+print(dic_simbolos['não'])
 
-print(new)
-'''
-p#q
-p<>q
-p^q
-p&q
-p/q
-'''
+print()
+print(list(dic_simbolos.values()))
+

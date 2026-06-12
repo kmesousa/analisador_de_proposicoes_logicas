@@ -85,17 +85,17 @@ print(tokenizar('p 0 q'))
 #pode parenteses com só um operando? tipo p ^ (q) ? acho que sim né
 #se for parenteses abrindo, o proximo nao pode ser operador, deve ser proposição ou - ou parenteses abrindo
 #se for parenteses fechando, o proximo
-def validar(tokens: list, operadores_binarios=['^', '+', '-->', '<-->'], negacao='-') -> bool:
+def validar(tokens: list, operadores=['^', '+', '-->', '<-->'], negacao='-') -> bool:
     if not tokens:
         return False
 
     # 1. Regras de borda (início e fim da expressão)
     # Não pode começar com ')' ou operador binário
-    if tokens[0] == ')' or tokens[0] in operadores_binarios:
+    if tokens[0] == ')' or tokens[0] in operadores:
         return False
         
     # Não pode terminar com '(', '-', ou operador binário
-    if tokens[-1] == '(' or tokens[-1] in operadores_binarios or tokens[-1] == negacao:
+    if tokens[-1] == '(' or tokens[-1] in operadores or tokens[-1] == negacao:
         return False
 
     # 2. Varredura dos tokens para verificar a ordem
@@ -103,26 +103,26 @@ def validar(tokens: list, operadores_binarios=['^', '+', '-->', '<-->'], negacao
         atual = tokens[i]
         proximo = tokens[i + 1]
 
-        # Verifica se o token ATUAL é do grupo que "pede operando"
-        atual_pede_operando = (atual == '(' or atual in operadores_binarios or atual == negacao)
+        # Verifica se o token atual é do grupo que "pede operando"
+        atual_pede_operando = (atual == '(' or atual in operadores or atual == negacao)
 
         # Verifica se o PRÓXIMO token é do grupo "operando" (proposição, '(' ou '-')
         prox_eh_operando = (
             proximo == '(' or 
             proximo == negacao or 
-            (proximo not in operadores_binarios and proximo not in ['(', ')', negacao]) # é proposição
+            (proximo not in operadores and proximo not in ['(', ')', negacao]) # é proposição
         )
 
-        # Se o token atual pede um operando, o próximo OBRIGATORIAMENTE tem que ser um operando.
+        # Se o token atual pede um operando, o próximo tem que ser um operando.
         if atual_pede_operando:
             if not prox_eh_operando:
                 return False
                 
-        # Se o token atual NÃO pede operando (ou seja, é proposição ou ')'), 
-        # o próximo OBRIGATORIAMENTE tem que ser um operador binário ou ')'
+        # Se o token atual não pede operando (ou seja, é proposição ou ')'), 
+        # o próximo tem que ser um operador binário ou ')'
         else:
-            # Operador binário ou parêntese fechando
-            prox_eh_operador = (proximo == ')' or proximo in operadores_binarios)
+            # Operador ou parêntese fechando
+            prox_eh_operador = (proximo == ')' or proximo in operadores)
             if not prox_eh_operador:
                 return False
 
