@@ -5,8 +5,10 @@ dic_simbolos = {
     'e': '^',
     'ou': '/',
     'se, então': '-->',
-    'se, e somente se': '<-->'
+    'se, e somente se': '<-->',
 }
+
+operadores = list(dic_simbolos.values())
 
 dic_precedencia = {
     dic_simbolos['não']: 5,
@@ -32,38 +34,6 @@ dic_funcoes = {
     dic_simbolos['se, e somente se']: lambda lhs, rhs: lhs and rhs or not lhs and not rhs
 }
 
-'''
-p  q   p -> q
-T  T    T
-T  F    T
-F  T    F
-F  F    T
-
-p and q or not q
-
-p  q    p <--> q
-T  T      T
-T  F      F
-F  T      F
-F  F      T
-
-p and q or not p and not q
-p and q or not (p or q)
-'''
-
-for i in dic_simbolos:
-    print(f'{i}: {dic_simbolos[i]}')
-
-operadores = list(dic_simbolos.values())
-print(operadores)
-
-# def refazer_dic_simbolos(dic):
-#     for i in dic:
-#         v = input(f'{i}:')
-#         i = v
-#     print(dic)
-#     return dic
-
-# new = refazer_dic_simbolos(dic_simbolos)
-
-# print(new)
+# _____ alterar os símbolos usados ________________________
+def refazer_dic_simbolos():
+    pass
