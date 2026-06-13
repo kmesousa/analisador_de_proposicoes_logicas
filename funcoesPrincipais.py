@@ -50,28 +50,51 @@ def tokenizar(proposicao:str) -> list:
         pilha = []
     return tokens
 
-# ------------------- validando os tokens ------------------------------
-'''validador geral, menos sobre pareamento de parenteses eu acho
-primeiro pode ser -, parenteses abrindo ou proposição
-nao pode ter um parenteses abrindo e logo apos um fechando () par vazio
-((p ^ q)) acho que isso eu vou ter que permitir, seria como se fosse, eh tecnicamente o parenteses nao tá vazio, entao deixa
-pode parenteses com só um operando? tipo p ^ (q) ? acho que sim né
-se for parenteses abrindo, o proximo nao pode ser operador, deve ser proposição ou - ou parenteses abrindo
-se for parenteses fechando, o proximo'''
-def validar(tokens:list, operadores=['-', '^', '+', '-->', '<-->']) -> bool:
+#_____________________________________VALIDADOR___________________________________________#
 
-    aux=['(',')']
-    char_operadores = ''.join(operadores)
+def validar(tokens: list, operadores=['^', '+', '-->', '<-->'], negacao='-') -> bool:
+    if not tokens:
+        return False
 
-    for i in range(len(tokens)):
-        if tokens[i][0] in char_operadores and tokens[i] not in operadores:
-            return False
-        if tokens[i] not in operadores:
-            pass
-        elif tokens[i] in operadores:
-            pass
-        elif tokens[i] in aux:
-            pass
+    # 1. Regras de borda (início e fim da expressão)
+    # Não pode começar com ')' ou operador binário
+    if tokens[0] == ')' or tokens[0] in operadores:
+        return False
+        
+    # Não pode terminar com '(', '-', ou operador binário
+    if tokens[-1] == '(' or tokens[-1] in operadores or tokens[-1] == negacao:
+        return False
+
+    # 2. Varredura dos tokens para verificar a ordem
+    for i in range(len(tokens) - 1):
+        atual = tokens[i]
+        proximo = tokens[i + 1]
+
+        # Verifica se o token atual é do grupo que "pede operando"
+        atual_pede_operando = (atual == '(' or atual in operadores or atual == negacao)
+
+        # Verifica se o PRÓXIMO token é do grupo "operando" (proposição, '(' ou '-')
+        prox_eh_operando = (
+            proximo == '(' or 
+            proximo == negacao or 
+            (proximo not in operadores and proximo not in ['(', ')', negacao]) # é proposição
+        )
+
+        # Se o token atual pede um operando, o próximo tem que ser um operando.
+        if atual_pede_operando:
+            if not prox_eh_operando:
+                return False
+                
+        # Se o token atual não pede operando (ou seja, é proposição ou ')'), 
+        # o próximo tem que ser um operador binário ou ')'
+        else:
+            # Operador ou parêntese fechando
+            prox_eh_operador = (proximo == ')' or proximo in operadores)
+            if not prox_eh_operador:
+                return False
+
+    return True
+#________________________________________________________________________________________#
 
 # ------------------- transformando tokens válidos em notação pos-fixa --------------------
 dic_precedencia = {
