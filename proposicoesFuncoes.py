@@ -38,18 +38,11 @@ def tokenizar(proposicao:str, operadores=['-', '^', '+', '-->', '<-->'], aux=['(
                 if i >= len(proposicao) or proposicao[i] not in char_operadores:
                     i -= 1
                     break
-                for j in posiveis:
+                for j in posiveis[:]:
                     if k >= len(j):
                         posiveis.remove(j)
-                    elif proposicao[i]!=j[k]:
-                        #print('=/=', proposicao[i], j[k])
+                    elif proposicao[i] != j[k]:
                         posiveis.remove(j)
-                    #elif proposicao[i]==j[k]:
-                        #print('==',proposicao[i], j[k])
-                    if proposicao[i] in char_operadores:
-                        pilha.append(proposicao[i])
-                        i+=1
-                        k+=1
             '''
             [- v ^ == --> ==> = ===> ---> -->]
 
@@ -140,6 +133,8 @@ dic_precedencia = {
     # '(':0,
     # ')':0
 }
+
+
 def posfixar(tokens:list, operadores=['-', '^', '/', '-->', '<-->']):
     aux = ['(',')']
     rpn = []
