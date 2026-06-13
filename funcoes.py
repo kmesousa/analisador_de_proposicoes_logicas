@@ -276,6 +276,8 @@ def resolver(posfixas):
 
     return tabela, classificacao, tamanho
 
+# --------------------------- imprimir tabela verdade ---------------------------------------------------
+
 def organizar_dados(dados, variaveis):
     organizados = {}
     for i in variaveis:
@@ -292,17 +294,34 @@ def tabela(posfixos):
     tamanho = resolver(posfixos)[2]
     chaves = list(dados.keys())
     if tamanho > 40: #se o tamanho da linha de cabeçário for mt grande, remover subsexpressoes
-        for i in range(len(dados)-1): #remover chaves que não forem variáveis ou que não forem a ultima
+        for i in range(len(dados)-1): #remover chaves que não forem variáveis ou que não forem a ultima(proposição final)
             if chaves[i] not in variaveis:
                 dados.pop(chaves[i])
                 tamanho -= len(chaves[i])
 
     if tamanho > 100: #se mesmo removendo as subexpressoes, o cabeçário ainda for mt grande
         print('proposição muito grande para formar tabela')
-        return ''
+        return False
     
     largura = (tamanho+len(dados)*4)
-    print('-'*largura)
+    if largura <= 50:
+        base = 50
+    else:
+        base = largura
+    
+    print(f' gerador de tabelas verdade '.upper().center(base, '='))
+    print('-'*base)
+
+    resultado =f'classificação: {resolver(posfixos)[1].upper()}'
+    proposicao = chaves[-1]
+    espaco_entre = base - len(resultado)-len(proposicao)
+    if espaco_entre < 4:
+        print(proposicao)
+        print(resultado)
+    else:
+        print(f'{proposicao}{' '*espaco_entre}{resultado}')
+
+    print('-'*base)
 
     for chave in dados:
         print(f'| {chave} |', end='')
@@ -317,14 +336,6 @@ def tabela(posfixos):
                     valor = 'F'
             print(f'| {valor.center(len(j))} |', end='')
         print('')
+    print('-'*base)
 
-'''
-=========== GERADOR DE TABELAS VERDADE =============
-----------------------------------------------------
-p ^ -p                    classificação: CONTRADIÇÃO
-----------------------------------------------------
-p | -p | p ^ -p
-T |  F |   F
-F |  T |   F
-'''
-
+    return base

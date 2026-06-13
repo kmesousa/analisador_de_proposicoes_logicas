@@ -1,9 +1,13 @@
 # --------------- limpar tela -------------------------------------------
 import os
 
+def clean():
+  if os.name == 'nt':
+    _ = os.system('cls') 
+
 #---------------- funcoes e dicionários ----------------------------------
 from dicsOperadores import dic_simbolos
-from funcoes import tokenizar, validar, posfixar, extrair_variaveis, gerar_combinacoes, resolver, tabela
+from funcoes import tokenizar, validar, posfixar, tabela
 
 #---------------- menu principal -----------------------------------------
 
@@ -15,6 +19,7 @@ sep = lambda: print('-'*tam)
 
 while continuar:
     while not valido:
+        clean()
         print(f' gerador de tabelas verdade '.upper().center(tam, '='))
         print(f'informações que eu nem sei se vou colocar ou não')
         sep()
@@ -69,13 +74,15 @@ while continuar:
         valido = True
 
     #-------------------------  resolver e tabela -------------------------------------------
-    sep()
-
-    posfixos = posfixar(tokens)
-
-    print(posfixos)
+    clean()
+    base = tabela(posfixar(tokens))
     
     print('continuar? (digite [sair] para sair)')
     sair = input('>>>>> ')
     if sair=='sair':
         continuar = False
+    else:
+        valido = False
+
+    #------------------ menu final -------------------------
+    '''colocar uma msg tipo, fim do projeto, ass. Milena e kme, etc sla'''
