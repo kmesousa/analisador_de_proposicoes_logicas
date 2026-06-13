@@ -181,7 +181,8 @@ def extrair_variaveis(posfixos) -> list:
 
     lista_variaveis = list(variaveis.keys())
 
-    # if tamanho > 25: #diminuir variávies caso sejam muito longas
+    #diminuir variávies caso sejam muito longas
+    # if tamanho > 25: 
     #     variaveis = {}
     #     for i in lista_variaveis:
     #         n = 1
@@ -194,7 +195,7 @@ def extrair_variaveis(posfixos) -> list:
     #         else:
     #             variaveis[i[0]]=''
     #     lista_variaveis = list(variaveis.keys())
-    #mas ai como ele vai saber qual usar nos posfixos kme? pensa     
+    #mas ai como ele vai saber qual usar nos posfixos na funcao de resolver? pensa kme     
 
     return lista_variaveis
 
@@ -288,16 +289,20 @@ def tabela(posfixos):
     variaveis = extrair_variaveis(posfixos)
     dados = organizar_dados(resolver(posfixos)[0], variaveis)
 
-    # tamanho = resolver(posfixos)[2]
-    # chaves = list(dados.keys())
-    # if tamanho > 40: #se o tamanho da linha de cabeçário for mt grande, remover subsexpressoes
-    #     for i in range(len(dados)-1): #remover chaves que não forem variáveis ou que não forem a ultima
-    #         if chaves[i] not in variaveis:
-    #             dados.pop(chaves[i])
-    #             tamanho -= len(chaves(i))
+    tamanho = resolver(posfixos)[2]
+    chaves = list(dados.keys())
+    if tamanho > 40: #se o tamanho da linha de cabeçário for mt grande, remover subsexpressoes
+        for i in range(len(dados)-1): #remover chaves que não forem variáveis ou que não forem a ultima
+            if chaves[i] not in variaveis:
+                dados.pop(chaves[i])
+                tamanho -= len(chaves[i])
 
-    # if tamanho > 70: #se mesmo removendo as subexpressoes, o cabeçário ainda for mt grande
-    #     return 'proposição muito grande para formar tabela'
+    if tamanho > 100: #se mesmo removendo as subexpressoes, o cabeçário ainda for mt grande
+        print('proposição muito grande para formar tabela')
+        return ''
+    
+    largura = (tamanho+len(dados)*4)
+    print('-'*largura)
 
     for chave in dados:
         print(f'| {chave} |', end='')
@@ -321,19 +326,5 @@ p ^ -p                    classificação: CONTRADIÇÃO
 p | -p | p ^ -p
 T |  F |   F
 F |  T |   F
-
-VALIDAÇÕES PARA A IMPRESSÃO DA TABELA (nem lembrava disso que preguiça)
-
-
-3. mts subexpressoes =  imprimir só variáveis e proposição final
-(se tam do cabeçalho > valor, esquecer as subexpressoes)
-(pode ser feito no passo de criar a tabela final i think)
-(se msm assim ainda ficar mt grande, proximo passo)
-
-4. se ainda assim ficar grande (aka mts variáveis de uma letra só e proposição final mt grande) = sorry, mt grande para imprimir tabela
-
-se puder imprimir 
-
-
 '''
 
