@@ -21,13 +21,14 @@ sep = lambda: print('-'*tam)
 while continuar:
     while not valido:
         clean()
+        #--------------- cabeçário ----------------------------------
         print(f' gerador de tabelas verdade '.upper().center(tam, '='))
         print(f'informações que eu nem sei se vou colocar ou não')
         sep()
 
+        #------------------ símbolos --------------------------------
         print('simbolos'.center(tam))
         sep()
-
         #imprimindo os simbolos dividos em duas colunas, uma ao lado da outra
         chaves = list(dic_simbolos.keys())
         par = len(chaves)//2 + 1
@@ -40,9 +41,9 @@ while continuar:
             else:
                 print(f'[{dic_simbolos[chaves[i]]}] {chaves[i]}')
             i +=1
-
         sep()
 
+        #---------------- input --------------------------------------
         print('digite a proposição OU digite: ')
         print('[sair] para sair')
         sep()
@@ -52,8 +53,6 @@ while continuar:
 
         if not definido: #pedir a proposição caso ela não tenha sido dada no final de uma anterior
             proposicao = input('>>>>>>> ')
-
-        # proposicao = input('>>>>>>> ')
 
         if proposicao=='sair':
             continuar = False
@@ -90,6 +89,6 @@ while continuar:
             proposicao = sair
             definido = True
 
-    #------------------ menu final -------------------------
+#------------------ menu final -------------------------
 clean()
 print('colocar uma msg tipo, fim do projeto, ass. Milena e kme, etc sla')
