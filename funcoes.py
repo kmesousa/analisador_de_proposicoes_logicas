@@ -85,6 +85,11 @@ se for parenteses fechando, o proximo'''
 def validar(tokens: list) -> bool:
 
     from dicsOperadores import operadores, dic_simbolos
+    from parenteses import parenteseses_certos
+
+    #validar a paridade dos parenteses
+    if not parenteseses_certos(tokens):
+        return False, 'parenteses não fechados'
 
     negacao= dic_simbolos['não']
     if not tokens:

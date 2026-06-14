@@ -14,6 +14,7 @@ from funcoes import tokenizar, validar, posfixar, tabela
 continuar = True
 valido = False
 msg = False
+definido = False
 tam = 50
 sep = lambda: print('-'*tam)
 
@@ -49,11 +50,13 @@ while continuar:
         if not valido and msg:
             print(f'inválido: {erro}')
 
-        proposicao = input('>>>>>>> ')
+        if not definido: #pedir a proposição caso ela não tenha sido dada no final de uma anterior
+            proposicao = input('>>>>>>> ')
+
+        # proposicao = input('>>>>>>> ')
 
         if proposicao=='sair':
             continuar = False
-            valido = True
             break
 
         #--------------------- validar ---------------------------------------------
@@ -74,15 +77,19 @@ while continuar:
         valido = True
 
     #-------------------------  resolver e tabela -------------------------------------------
-    clean()
-    base = tabela(posfixar(tokens))
-    
-    print('continuar? (digite [sair] para sair)')
-    sair = input('>>>>> ')
-    if sair=='sair':
-        continuar = False
-    else:
-        valido = False
+    if valido:
+        clean()
+        base = tabela(posfixar(tokens))
+        
+        print('continuar? (digite [sair] para sair)')
+        sair = input('>>>>> ')
+        if sair=='sair':
+            continuar = False
+        else:
+            valido = False
+            proposicao = sair
+            definido = True
 
     #------------------ menu final -------------------------
-    '''colocar uma msg tipo, fim do projeto, ass. Milena e kme, etc sla'''
+clean()
+print('colocar uma msg tipo, fim do projeto, ass. Milena e kme, etc sla')
