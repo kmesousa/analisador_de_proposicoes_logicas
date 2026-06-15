@@ -93,16 +93,16 @@ def validar(tokens: list) -> bool:
 
     negacao= dic_simbolos['não']
     if not tokens:
-        return False, 'invalido'
+        return False, 'Erro: nenhum token encontrado, expressão vazia'
 
     # 1. Regras de borda (início e fim da expressão)
     # Não pode começar com ')' ou operador binário
     if tokens[0] == ')' or (tokens[0] in operadores and tokens[0]!=dic_simbolos['não']):
-        return False, 'invalido'
+        return False, 'Erro: precedência inválida'
 
     # Não pode terminar com '(', '-', ou operador binário
     if tokens[-1] == '(' or tokens[-1] in operadores or tokens[-1] == negacao:
-        return False, 'invalido'
+        return False, 'Erro: precedência inválida'
 
     # 2. Varredura dos tokens para verificar a ordem
     for i in range(len(tokens) - 1):
@@ -324,7 +324,7 @@ def tabela(posfixos):
         print(proposicao)
         print(resultado)
     else:
-        print(f'{proposicao}{' '*espaco_entre}{resultado}')
+        print(f"{proposicao}{' '*espaco_entre}{resultado}")
 
     print('-'*base)
 
