@@ -1,20 +1,14 @@
-etapas do programa
+## etapas do programa
 1. menu e entrada
-    ultimo a ser feito
+    falta umas coisinhas
 2. tokenização
-    falta verificar que só podem ser tokens letrar do alfabeto e números
 3. validação inicial
-    falta fazer
+    falta umas coitinhas
 4. notação pos fixa
-    pronta
 5. combinacoes
-    pronta
 5. avaliação e classificação
-    pronto
 7. subexpressoes
-    falta fazer
 8. tabelas
-    falta fazer
 
 ## como fazer a resolução
 -> só rpn ou
