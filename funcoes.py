@@ -59,6 +59,9 @@ def tokenizar(proposicao:str) -> list:
             i -=1
 
         else: #identificar tokens que não são proposições, operadores nem auxiliadores
+            print(f"Proposição: {repr(proposicao)}")
+            print(f"Caractere inválido: {repr(proposicao[i])}")
+            print(f"Índice: {i}")
             return False, f'bad token: {proposicao[i]} at index {i}'
 
         i += 1
@@ -122,7 +125,7 @@ def validar(tokens: list) -> bool:
         # Se o token atual pede um operando, o próximo tem que ser um operando.
         if atual_pede_operando:
             if not prox_eh_operando:
-                return False, 'invalido'
+                return False, f"Esperava uma proposição após '{atual}', mas encontrou '{proximo}'"
 
         # Se o token atual não pede operando (ou seja, é proposição ou ')'),
         # o próximo tem que ser um operador binário ou ')'
@@ -130,7 +133,7 @@ def validar(tokens: list) -> bool:
             # Operador ou parêntese fechando
             prox_eh_operador = (proximo == ')' or proximo in operadores)
             if not prox_eh_operador:
-                return False, 'invalido'
+                return False, f"Esperava um operador entre '{atual}' e '{proximo}'"
 
     return True, 'valido'
 

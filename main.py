@@ -22,8 +22,9 @@ while continuar:
     while not valido:
         clean()
         #--------------- cabeçário ----------------------------------
-        print(f' gerador de tabelas verdade '.upper().center(tam, '='))
-        print(f'informações que eu nem sei se vou colocar ou não')
+        print(' GERADOR E CLASSIFICADOR DE TABELAS VERDADE '.center(tam, '='))
+        print('Lógica Proposicional'.center(tam))
+        print('Use os símbolos listados abaixo para montar expressões.'.center(tam))
         sep()
 
         #------------------ símbolos --------------------------------
@@ -91,4 +92,17 @@ while continuar:
 
 #------------------ menu final -------------------------
 clean()
-print('colocar uma msg tipo, fim do projeto, ass. Milena e kme, etc sla')
+
+print('=' * 60)
+print('FIM DO PROGRAMA'.center(60))
+print('=' * 60)
+
+print('\nGerador de Tabelas Verdade')
+print('Projeto desenvolvido para a disciplina de MDL.')
+
+print('\nDesenvolvido por:')
+print('- Kme')
+print('- Mileena')
+
+print('\nObrigado por utilizar o programa.')
+print('=' * 60)
