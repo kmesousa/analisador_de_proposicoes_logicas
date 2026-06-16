@@ -61,25 +61,36 @@ while continuar:
 
         #--------------------- validar ---------------------------------------------
         #se não passar na validação, deve repetir até passar (ou [sair]) e mostrar a msg de erro
-        tokens = tokenizar(proposicao)
-        if tokens[0]==False:
+        try:
+            tokens = tokenizar(proposicao)
+
+            if tokens[0] == False:
+                valido = False
+                msg = True
+                erro = tokens[1]
+                continue
+
+            resultado = validar(tokens)
+
+            if resultado[0] == False:
+                valido = False
+                msg = True
+                erro = resultado[1]
+                continue
+
+            valido = True
+
+        except Exception as e:
             valido = False
             msg = True
-            erro = tokens[1]
-            break
+            erro = f"Expressão inválida: {e}"
 
-        if validar(tokens)[0]==False:
-            valido = False
-            msg = True
-            erro = validar(tokens)[1]
-            break 
-
-        valido = True
 
     #-------------------------  resolver e tabela -------------------------------------------
     if valido:
         clean()
-        base = tabela(posfixar(tokens))
+         
+        base = tabela(posfixar (tokens))
         
         print('continuar? (digite [sair] para sair)')
         sair = input('>>>>> ')
@@ -101,8 +112,11 @@ print('\nGerador de Tabelas Verdade')
 print('Projeto desenvolvido para a disciplina de MDL.')
 
 print('\nDesenvolvido por:')
-print('- Kme')
+print('- Kamily')
 print('- Mileena')
 
 print('\nObrigado por utilizar o programa.')
+print('\n REFERÊNCIA:')
+print()
+print('link: https://youtu.be/0c8b7YfsBKs?si=KK5-bVCiTEjJ_o7v')
 print('=' * 60)

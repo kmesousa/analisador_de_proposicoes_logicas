@@ -70,6 +70,8 @@ def tokenizar(proposicao:str) -> list:
         pilha = []
     return tokens
 
+
+
 # ------------------- validando os tokens ------------------------------
 '''validador geral, menos sobre pareamento de parenteses eu acho
 primeiro pode ser -, parenteses abrindo ou proposição
@@ -90,30 +92,44 @@ def validar(tokens: list) -> bool:
     from dicsOperadores import operadores, dic_simbolos
     from parenteses import parenteseses_certos
 
+    negacao= dic_simbolos['não']
+
+    operadores_binarios = operadores.copy()
+    operadores_binarios.remove(negacao)
+
+
     #validar a paridade dos parenteses
     if not parenteseses_certos(tokens):
         return False, 'parenteses não fechados'
 
-    negacao= dic_simbolos['não']
+    
     if not tokens:
         return False, 'Erro: nenhum token encontrado, expressão vazia'
 
     # 1. Regras de borda (início e fim da expressão)
     # Não pode começar com ')' ou operador binário
-    if tokens[0] == ')' or (tokens[0] in operadores and tokens[0]!=dic_simbolos['não']):
+    #if tokens[0] == ')' or (tokens[0] in operadores and tokens[0]!=dic_simbolos['não']):
+    if tokens[0] in operadores_binarios:
         return False, 'Erro: precedência inválida'
 
     # Não pode terminar com '(', '-', ou operador binário
     if tokens[-1] == '(' or tokens[-1] in operadores or tokens[-1] == negacao:
         return False, 'Erro: precedência inválida'
 
+    if tokens[-1] in operadores:
+        return False, f"Operador '{tokens[-1]}' sem operando"
+
     # 2. Varredura dos tokens para verificar a ordem
     for i in range(len(tokens) - 1):
         atual = tokens[i]
         proximo = tokens[i + 1]
 
+        if atual not in operadores and atual != '(' and atual != ')':
+            if proximo not in operadores and proximo != ')':
+                return False, f"Falta operador entre '{atual}' e '{proximo}'"
+
         # Verifica se o token atual é do grupo que "pede operando"
-        atual_pede_operando = (atual == '(' or atual in operadores or atual == negacao)
+        atual_pede_operando = (atual == '(' or atual == negacao or atual in operadores_binarios)
 
         # Verifica se o PRÓXIMO token é do grupo "operando" (proposição, '(' ou '-')
         prox_eh_operando = (
@@ -131,7 +147,7 @@ def validar(tokens: list) -> bool:
         # o próximo tem que ser um operador binário ou ')'
         else:
             # Operador ou parêntese fechando
-            prox_eh_operador = (proximo == ')' or proximo in operadores)
+            prox_eh_operador = (proximo == ')' or proximo in operadores_binarios)
             if not prox_eh_operador:
                 return False, f"Esperava um operador entre '{atual}' e '{proximo}'"
 
@@ -145,6 +161,18 @@ def posfixar(tokens:list) -> list:
     pilha = []
     for i in range(len(tokens)):
 
+        print("TOKEN:", tokens[i])
+        print("ANTES")
+        print("NPF:", npf)
+        print("PILHA:", pilha)
+
+        ...
+    
+        print("DEPOIS")
+        print("NPF:", npf)
+        print("PILHA:", pilha)
+        print()
+
         if tokens[i] not in operadores and tokens[i] not in aux:
             npf.append(tokens[i])
 
@@ -156,7 +184,11 @@ def posfixar(tokens:list) -> list:
                             pilha.append(tokens[i])
                         elif dic_precedencia[tokens[i]] > dic_precedencia[pilha[-1]]:
                             pilha.append(tokens[i])
-                        elif dic_precedencia[tokens[i]] <= dic_precedencia[pilha[-1]]:
+
+                        elif dic_precedencia[tokens[i]] == dic_precedencia[pilha[-1]]:
+                            pilha.append(tokens[i])
+
+                        elif dic_precedencia[tokens[i]] < dic_precedencia[pilha[-1]]:
                             while pilha!=[] and dic_precedencia[tokens[i]] <= dic_precedencia[pilha[-1]]:
                                 npf.append(pilha.pop())
                             pilha.append(tokens[i])
@@ -239,6 +271,7 @@ def gerar_combinacoes(variaveis):
 def resolver(posfixas):
     from dicsOperadores import operadores, dic_aridade, dic_funcoes
 
+
     variaveis = extrair_variaveis(posfixas)
     combinacoes = gerar_combinacoes(variaveis)
 
@@ -283,6 +316,7 @@ def resolver(posfixas):
         classificacao = 'contingência'
 
     return tabela, classificacao, tamanho
+
 
 # --------------------------- imprimir tabela verdade ---------------------------------------------------
 
