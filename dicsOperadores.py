@@ -6,7 +6,6 @@ dic_simbolos = {
     'ou': '\/',
     'se, então': '-->',
     'se, e somente se': '<-->',
-    'ou exclusivo': '<>',
 }
 
 operadores = list(dic_simbolos.values())
