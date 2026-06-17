@@ -32,9 +32,14 @@ while continuar:
         sep()
         #imprimindo os simbolos dividos em duas colunas, uma ao lado da outra
         chaves = list(dic_simbolos.keys())
-        par = len(chaves)//2 + 1
+        if len(chaves)%2==0:
+            par = len(chaves)//2
+            criterio = lambda i: i < len(chaves)//2
+        else:
+            par = len(chaves)//2+1
+            criterio = lambda i: i < len(chaves)//2+1
         i = 0
-        while i < len(chaves)//2+1:
+        while criterio(i):
             if i + par < len(chaves):
                 primeiro = f'[{dic_simbolos[chaves[i]]}] {chaves[i]}'
                 segundo = f'[{dic_simbolos[chaves[i+par]]}] {chaves[i+par]}'
