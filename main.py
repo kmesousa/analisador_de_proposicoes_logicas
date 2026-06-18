@@ -50,7 +50,7 @@ while continuar:
         sep()
 
         #---------------- input --------------------------------------
-        print('digite a proposição OU digite: ')
+        print('digite a fórmula proposicional OU digite: ')
         print('[sair] para sair')
         sep()
 
