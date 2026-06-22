@@ -19,15 +19,13 @@ def tokenizar(proposicao:str) -> list: #recebe a formula proposicional lógica e
 
     from dicsOperadores import operadores #pegar a lista de operadores
     operadores = operadores_decrescentes(operadores) #colocar a lista em ordem decrescente pelo número de caracteres
-
     aux=['(',')']
     char_operadores = ''.join(operadores) #identificar todos caracteres presentes dos operadores
-
     tokens = [] #lista que receberá os tokens
-    i = 0 #inicialização do while
 
+    i = 0 #inicialização do while
     while i < (len(proposicao)): #percorrer os caracteres da proposição
-        pilha = []
+        pilha = [] #pilha para a construção dos tokens
 
         # ---------------------- construir variáveis ----------------------------------------------------------------------
         if proposicao[i] not in char_operadores and proposicao[i] not in aux and (proposicao[i].isalnum() or proposicao[i].isspace()): # não pode ser formada por caracteres usados nos operadores e só pode conter letrar, números e espaços)
@@ -41,24 +39,24 @@ def tokenizar(proposicao:str) -> list: #recebe a formula proposicional lógica e
             pilha.append(proposicao[i]) #adicionados individualmente na pilha, cada parentese é um token por si só
 
         #---------------------- descobrir operadores compostos --------------------------------------------------------
-        elif proposicao[i] in char_operadores:
-            #procurar pelo mais longo, se achar, adicionar, se não, bad token!
-            for o in range(len(operadores)): #['-', '^', '+', '-->', '<-->']
-                w = i
+        elif proposicao[i] in char_operadores: #caso o caractere atual seja um dos usados para formar operadores
+            #procurar pelo mais longo primeiro
+            for o in range(len(operadores)):
+                w = i #simular os proximos caracteres para verificar se forma operadores longo
                 valido = True
                 for j in range(len(operadores[o])):
-                    if operadores[o][j]==proposicao[w]:
+                    if operadores[o][j]==proposicao[w]: #verificar se os proximos caracteres condizem com os do operador
                         w+=1
                     else:
                         valido = False
                         break
                 if valido:
                     pilha.extend(operadores[o])
-                    i = w
+                    i = w #atualizar com a posição do proximo caractere após o ultimo do operador
                     break
             if not valido:
                 return False, f'bad token: {proposicao[i]} at index {i}'
-            i -=1
+            i -=1 #voltar para o ultimo caractere do operador
 
         else: #identificar tokens que não são proposições, operadores nem auxiliadores
             print(f"Proposição: {repr(proposicao)}")
@@ -67,15 +65,14 @@ def tokenizar(proposicao:str) -> list: #recebe a formula proposicional lógica e
             return False, f'bad token: {proposicao[i]} at index {i}'
 
         i += 1
-        if pilha!=[' ']:
-            tokens.append(''.join(pilha).strip())
+        if pilha!=[' ']: #não adicionar espaços entre tokens a lista
+            tokens.append(''.join(pilha).strip()) #adicionar tokens removendo os espaços das extremidades
         pilha = []
     return tokens
 
 # ------------------- validando os tokens ------------------------------
-
 def parenteseses_certos(lista:list) -> bool:
-    #só verifica se eles estão pareados corretamente, não diz nada a respeito do posicionamento parenteses, operandos e operadores(ex. invalidade de (90+)40, 90(40), validade de (90)+40, etc), então acho que é melhor usar outro método que cubra tudo de uma vez
+    #só verifica se eles estão pareados corretamente (não diz nada a respeito do posicionamento parenteses, operandos e operadores)
 
     pilha1 = [] #( não pode conter elementos no final
     pilha2 =[] #) não pode conter elementos caso a pilha 2 esteja vazia a qualquer momento

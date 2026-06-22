@@ -94,9 +94,9 @@ while continuar:
     #-------------------------  resolver e tabela -------------------------------------------
     if valido:
         clean()
-         
+
         base = tabela(posfixar(tokens), proposicao)
-        
+
         print('continuar? (digite [sair] para sair)')
         sair = input('>>>>> ')
         if sair=='sair':
