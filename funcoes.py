@@ -1,44 +1,47 @@
-# ------------------- transformando a string em tokens ------------------------------
-def operadores_decrescentes(operadores): #colocar os operadores em ordem de caracteres, do maior para o menor
-    ordenados = []
-    i = 0
-    maior = len(operadores[0])
-    for i in range(1, len(operadores)):
-        if len(operadores[i-1])<len(operadores[i]):
-            maior = len(operadores[i])
-    while len(ordenados)!=len(operadores):
-        for i in range(len(operadores)):
-            if len(operadores[i])==maior:
+# ------------------- 1 TRANSFORMANDO A LISTA EM TOKENS ------------------------------
+def operadores_decrescentes(operadores): #colocar os operadores em ordem descrescente de quantidade de caracteres, para usar para descobrir os operadores na função tokenizar
+    ordenados = [] #lista para receber com a ordem correta
+    i = 0 #ERRO isso seria o intinerador caso fosse usar o while, mas não é o caso, linha é ignorada no programa
+    maior = len(operadores[0]) #maior operador recebe o tamanho do primeiro operador
+    #------ descobrir o maior operador ------------------------------------------------------------------------
+    for i in range(1, len(operadores)): #itinerar pelos operadores, começando pelo segundo, para descobrir o maior
+        if len(operadores[i-1])<len(operadores[i]): #verificar se o atual é maior que o anterior
+            maior = len(operadores[i]) #recebe o tamanho de caracteres do maior operador ao final do for
+    #---- ordenar os operadores --------------------------------------------------------------------------------
+    while len(ordenados)!=len(operadores): #enquanto a lista de ordenados não conter todos os elementos da lista de operadores
+        for i in range(len(operadores)): #itinerar cada operador
+            if len(operadores[i])==maior: #se o operador tiver a mesma quantidade de caracteres do maior operador encontrado
                 ordenados.append(operadores[i])
-        maior -= 1
+        maior -= 1 #diminuir o tamanho do maior para encontrar os proximos operadores menores que ele
     return ordenados
 
-def tokenizar(proposicao:str) -> list:
+def tokenizar(proposicao:str) -> list: #recebe a formula proposicional lógica e retorna uma lista com os tokens
 
-    from dicsOperadores import operadores
-    operadores = operadores_decrescentes(operadores)
+    from dicsOperadores import operadores #pegar a lista de operadores
+    operadores = operadores_decrescentes(operadores) #colocar a lista em ordem decrescente pelo número de caracteres
 
     aux=['(',')']
-    char_operadores = ''.join(operadores) #operadores deve ser uma lista simples, não um dicionário
-    tokens = []
-    i = 0
+    char_operadores = ''.join(operadores) #identificar todos caracteres presentes dos operadores
 
-    while i < (len(proposicao)):
+    tokens = [] #lista que receberá os tokens
+    i = 0 #inicialização do while
+
+    while i < (len(proposicao)): #percorrer os caracteres da proposição
         pilha = []
 
-        #construir variáveis (só podem ser formados por letras e números)
-        if proposicao[i] not in char_operadores and proposicao[i] not in aux and (proposicao[i].isalnum() or proposicao[i].isspace()):
-            while i<len(proposicao) and proposicao[i] not in char_operadores and proposicao[i] not in aux and (proposicao[i].isalnum() or proposicao[i].isspace()):
+        # ---------------------- construir variáveis ----------------------------------------------------------------------
+        if proposicao[i] not in char_operadores and proposicao[i] not in aux and (proposicao[i].isalnum() or proposicao[i].isspace()): # não pode ser formada por caracteres usados nos operadores e só pode conter letrar, números e espaços)
+            while i<len(proposicao) and proposicao[i] not in char_operadores and proposicao[i] not in aux and (proposicao[i].isalnum() or proposicao[i].isspace()): #percorrer a proposição enquanto estiver em seu escopo e atender as condições de caractere para variável
                 pilha.append(proposicao[i])
-                i += 1
-            i -= 1
+                i += 1 #ir para o próximo caracterere da proposição
+            i -= 1 #quando encontrar um caractere que não atende aos requesitos da variável, encerra o while das variáveis e incrementa -1 para avaliar esse caractere no próximo while maior para encontrar em qual elif ele se encaixa
 
-        #identificar parenteses
+        #------------------------ identificar parenteses ------------------------------------------------------------------
         elif proposicao[i] in aux:
-            pilha.append(proposicao[i])
+            pilha.append(proposicao[i]) #adicionados individualmente na pilha, cada parentese é um token por si só
 
-        #construir operadores compostos
-        elif proposicao[i] in char_operadores: 
+        #---------------------- descobrir operadores compostos --------------------------------------------------------
+        elif proposicao[i] in char_operadores:
             #procurar pelo mais longo, se achar, adicionar, se não, bad token!
             for o in range(len(operadores)): #['-', '^', '+', '-->', '<-->']
                 w = i
@@ -168,16 +171,6 @@ def posfixar(tokens:list) -> list:
     pilha = []
     for i in range(len(tokens)):
 
-        # print("TOKEN:", tokens[i])
-        # print("ANTES")
-        # print("NPF:", npf)
-        # print("PILHA:", pilha)
-    
-        # print("DEPOIS")
-        # print("NPF:", npf)
-        # print("PILHA:", pilha)
-        # print()
-
         if tokens[i] not in operadores and tokens[i] not in aux:
             npf.append(tokens[i])
 
@@ -225,7 +218,7 @@ def extrair_variaveis(posfixos) -> list:
 
     lista_variaveis = list(variaveis.keys())
 
-    #diminuir variávies caso sejam muito longas(ex. chove vira c, teria que fazer antes do posfixar)    
+    #diminuir variávies caso sejam muito longas(ex. chove vira c, teria que fazer antes do posfixar)
     return lista_variaveis
 
 def gerar_combinacoes(variaveis):
@@ -326,7 +319,7 @@ def tabela(posfixos, proposicao):
     dados[proposicao] = dados.pop(chaves[-1])
 
     tamanho = resolver(posfixos)[2]
-    
+
     if tamanho > 40: #se o tamanho da linha de cabeçário for mt grande, remover subsexpressoes
         for i in range(len(dados)-1): #remover chaves que não forem variáveis ou que não forem a ultima(proposição final)
             if chaves[i] not in variaveis:
@@ -336,13 +329,13 @@ def tabela(posfixos, proposicao):
     if tamanho > 100: #se mesmo removendo as subexpressoes, o cabeçário ainda for mt grande
         print('proposição muito grande para formar tabela')
         return False
-    
+
     largura = (tamanho+len(dados)*4)
     if largura <= 50:
         base = 50
     else:
         base = largura
-    
+
     print(f' gerador de tabelas verdade '.upper().center(base, '='))
     print('-'*base)
 
