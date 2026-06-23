@@ -50,9 +50,10 @@ while continuar:
         sep()
 
         #---------------- input --------------------------------------
-        print('digite a fórmula proposicional OU digite: ')
-        print('[sair] para sair')
-        sep()
+        if not definido:
+            print('digite a fórmula proposicional OU digite: ')
+            print('[sair] para sair')
+            sep()
 
         if not valido and msg:
             print(f'inválido: {erro}')
@@ -70,6 +71,7 @@ while continuar:
             tokens = tokenizar(proposicao)
 
             if tokens[0] == False:
+                definido = False
                 valido = False
                 msg = True
                 erro = tokens[1]
@@ -78,6 +80,7 @@ while continuar:
             resultado = validar(tokens)
 
             if resultado[0] == False:
+                definido = False
                 valido = False
                 msg = True
                 erro = resultado[1]
@@ -86,6 +89,7 @@ while continuar:
             valido = True
 
         except Exception as e:
+            definido = False
             valido = False
             msg = True
             erro = e
