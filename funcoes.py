@@ -85,7 +85,7 @@ def parenteseses_certos(lista:list) -> bool:
             pilha2.append(lista[i])
 
         #2: pareamento
-        while len(pilha2)!=0 and len(pilha1)!=0:
+        while len(pilha2)!=0 and len(pilha1)!=0: #fazer pares enquanto tiverem opcoes
             del pilha1[0]
             del pilha2[0]
 
@@ -104,7 +104,6 @@ def validar(tokens: list) -> bool:
 
     operadores_binarios = operadores.copy()
     operadores_binarios.remove(negacao)
-
 
     #validar a paridade dos parenteses
     if not parenteseses_certos(tokens):
@@ -164,37 +163,37 @@ def validar(tokens: list) -> bool:
 def posfixar(tokens:list) -> list:
     from dicsOperadores import dic_precedencia, operadores
     aux = ['(',')']
-    npf = []
+    npf = [] #receber notação pos fixa
     pilha = []
-    for i in range(len(tokens)):
 
-        if tokens[i] not in operadores and tokens[i] not in aux:
+    for i in range(len(tokens)): #percorrer os tokens
+        if tokens[i] not in operadores and tokens[i] not in aux: #operandos coloca na lista posfixa
             npf.append(tokens[i])
 
-        elif tokens[i] in operadores:
-                    if pilha==[]:
+        elif tokens[i] in operadores: #operadores deve checar
+                    if pilha==[]: #se a pilha está vazia, adiciona
                         pilha.append(tokens[i])
                     else: #pilha!=[]
-                        if pilha[-1]=='(': #nunca vai ser )
+                        if pilha[-1]=='(': #nunca vai ser ), só adiciona a pilha normalmente
                             pilha.append(tokens[i])
-                        elif dic_precedencia[tokens[i]] > dic_precedencia[pilha[-1]]:
+                        elif dic_precedencia[tokens[i]] > dic_precedencia[pilha[-1]]: #se a pilha tiver um operador, deve comparar a precedencia deles
+                            pilha.append(tokens[i]) #se o atual tiver maior precedencia, adiciona
+
+                        elif dic_precedencia[tokens[i]] == dic_precedencia[pilha[-1]]: #se tiverem a mesma precedencia, adiciona
                             pilha.append(tokens[i])
 
-                        elif dic_precedencia[tokens[i]] == dic_precedencia[pilha[-1]]:
-                            pilha.append(tokens[i])
-
-                        elif dic_precedencia[tokens[i]] < dic_precedencia[pilha[-1]]:
-                            while pilha!=[] and dic_precedencia[tokens[i]] <= dic_precedencia[pilha[-1]]:
-                                npf.append(pilha.pop())
-                            pilha.append(tokens[i])
+                        elif dic_precedencia[tokens[i]] < dic_precedencia[pilha[-1]]: #se a precedencia do atual for menor
+                            while pilha!=[] and dic_precedencia[tokens[i]] <= dic_precedencia[pilha[-1]]: #enquanto a pilha nao esta vazia e a precedencia do atual for menor doq a do ultimo da pilha
+                                npf.append(pilha.pop()) #remove o operador da pilha e adiciona na lista posfixa
+                            pilha.append(tokens[i]) #adiciona o operador atual a pilha
 
         elif tokens[i]=='(':
             pilha.append(tokens[i])
 
-        elif tokens[i]==')':
+        elif tokens[i]==')': #quando encontrar um fecha parenteses, adiciona tudo que estava na pilha a lista posfixa
             while pilha[-1]!='(':
                 npf.append(pilha.pop())
-            if pilha[-1]=='(':
+            if pilha[-1]=='(': #quando encontra o abre parenteses, remove da pilha e continua
                 pilha.pop()
 
         while i == len(tokens)-1 and pilha!=[]:
@@ -203,156 +202,153 @@ def posfixar(tokens:list) -> list:
     return npf
 
 # ------------------- gerando combinações para as variáveis --------------------
-
-def extrair_variaveis(posfixos) -> list:
+def extrair_variaveis(posfixos) -> list: #extrair as variaveis dos posfixos
     from dicsOperadores import operadores
     variaveis = {}
     tamanho = 0
     for i in posfixos:
-        if i not in operadores:
+        if i not in operadores: #o que nao for token, obrigatoriamente é variável, pois não há pareteses nos posfixos
             variaveis[i] = ''
-            tamanho += len(i)
+            tamanho += len(i) #controlar o tamanho para futuramente adicionar função de abreviar variáveis não unitárias
 
     lista_variaveis = list(variaveis.keys())
-
-    #diminuir variávies caso sejam muito longas(ex. chove vira c, teria que fazer antes do posfixar)
     return lista_variaveis
 
 def gerar_combinacoes(variaveis):
 
-    #crinando a lista com dicionários vazios para cada combinação
-    qte_combinacoes = 2 ** len(variaveis)
-    combinacoes = [0]*qte_combinacoes
+    qte_combinacoes = 2 ** len(variaveis) #quantidade das combinações é 2**n, pois cada variável pode ter 2 estados (TRUE/ FALSE)
+    combinacoes = [0]*qte_combinacoes #lista com a quantidade de combinaçãoes
     for i in range(qte_combinacoes):
-        combinacoes[i]={}
+        combinacoes[i]={} #cada item da lista de combinações vira um dicionário vazio para receber a combinação
 
-    valores = (True, False)
+    valores = (True, False) #valores que a variável pode receber
 
-    #colunas por variável
+    #qte e tamanho de blocos por variável
     for v in range(len(variaveis)):
-        blocos = 2**(v+1)
+        blocos = 2**(v+1) #quantas repartições a variável faz entre TRUE e FALSE (blocos = seção de combinações de 1 variável)
         inicio_bloco = 0
-        fim_bloco = inicio_bloco + qte_combinacoes//blocos
+        fim_bloco = inicio_bloco + qte_combinacoes//blocos #tamanho do bloco é a quantidade de combinações // qte de blocos
 
-        #blocos por valor da variável
+        #atribuindo valores aos blocos
         for i in range(blocos):
-            valor = valores[i%2]
+            valor = valores[i%2] #alternar entre TRUE e FALSE para cada bloco
 
-            #colocando o valor na variável
-            for j in range(inicio_bloco, fim_bloco):
-                combinacoes[j][variaveis[v]] = valor
-            inicio_bloco = fim_bloco
-            fim_bloco += qte_combinacoes//blocos
-    return combinacoes #[{'p': True, 'q': True}, {'p': True, 'q': False}, {'p': False, 'q': True}, {'p': False, 'q': False}]
+            #colocando o valor na variável e no dicionário
+            for j in range(inicio_bloco, fim_bloco): #para o bloco inteiro de combinações a variavel recebe o mesmo valor
+                combinacoes[j][variaveis[v]] = valor #coloca a variável na combição
+            inicio_bloco = fim_bloco #começa um novo bloco a partir do fim do anterior
+            fim_bloco += qte_combinacoes//blocos #define o fim do bloco a partir de seu tamanho
+    #tipo de return: [{'p': True, 'q': True}, {'p': True, 'q': False}, {'p': False, 'q': True}, {'p': False, 'q': False}]
+    return combinacoes
 
 #--------------- resolução da expressão com os valores dados nas combinações ------------------
 
 def resolver(posfixas):
     from dicsOperadores import operadores, dic_aridade, dic_funcoes
 
+    variaveis = extrair_variaveis(posfixas) #execulta a função de extrair variáveis
+    combinacoes = gerar_combinacoes(variaveis) #gera a combinação das variáveis
 
-    variaveis = extrair_variaveis(posfixas)
-    combinacoes = gerar_combinacoes(variaveis)
-
+    #descobrir a classificação
     tautologia = True
     contradicao = True
 
-    pilha = []
-    tabela = {}
-    tamanho = 0
+    pilha = [] #armazenar operandos aguardando operador (não precisava ter sido iniciada aq ops)
+    tabela = {} #recebe a tabela final com as variáveis, subexpressões, resultado final e subexpressoes
+    tamanho = 0 #tamanho do cabeçario (variáveis + susbexpressões + final) para verificar se pode imprimir corretamente
 
-    for c in range(len(combinacoes)):
-        pilha = []
-        for i in range(len(posfixas)):
+    for c in range(len(combinacoes)): #para cada combinação
+        pilha = [] #reiniciar a pilha (não precisava ter sido iniciada antes, opa)
+        for i in range(len(posfixas)): #percorrer posfixas
             if posfixas[i] in variaveis:
-                expressao = posfixas[i]
-                valor = combinacoes[c][posfixas[i]]
-            elif posfixas[i] in operadores:
-                if dic_aridade[posfixas[i]]==1:
-                    op = pilha.pop()
-                    expressao = f'{posfixas[i]} {op[0]}'
-                    valor = dic_funcoes[posfixas[i]](op[1])
-                else:
-                    rhs = pilha.pop()
-                    lhs = pilha.pop()
-                    expressao = f'{lhs[0]} {posfixas[i]} {rhs[0]}'
-                    valor = dic_funcoes[posfixas[i]](lhs[1],rhs[1])
-            pilha.append((expressao, valor))
+                expressao = posfixas[i] #armazena a variável
+                valor = combinacoes[c][posfixas[i]] #armazena o valor da variável na combinação atual
+            elif posfixas[i] in operadores: #se encontar um operador, deve verificar a arridade
+                if dic_aridade[posfixas[i]]==1: #se for operador unitário (arridade 1, infere sobre apenas 1 operando)
+                    op = pilha.pop() #o operando é o ultimo da pilha de operandos
+                    expressao = f'{posfixas[i]} {op[0]}' #a subexpressão é o operador a esquerda e o operando a direita
+                    valor = dic_funcoes[posfixas[i]](op[1]) #o valor é a função do operando sobre o operador
+                else: #se for operador binário (infere sobre 2 operandos, não suporta operadores com arridade > 2)
+                    rhs = pilha.pop() #o operando da direita é o ultimo da pilha
+                    lhs = pilha.pop() #o operando da esquerda é o penultimo da pilha (agora o ulitmo, depois da remoção do rhs)
+                    expressao = f'{lhs[0]} {posfixas[i]} {rhs[0]}' #a expressão é o operando da esquerda, operador, opr da direita
+                    valor = dic_funcoes[posfixas[i]](lhs[1],rhs[1]) #o valor a função do operado sobre os operandos da esqueda e direita
+            pilha.append((expressao, valor)) #armazena expressão(variável, subexpressão ou expressao final reconstruida) e valor
 
-            if expressao not in tabela:
-                tabela[expressao] = []
+            if expressao not in tabela: #tabela irá armazenar um dicionário
+                tabela[expressao] = [] #chaves são as expressões e valores são listas que armazenam o valor da expressão para cada linha da tabela/ cada combinação das variáveis iniciais
                 tamanho += len(expressao)
-            if c+1 > len(tabela[expressao]): #adicionar apenas 1 valor por combinanação a cada variável ou subexpressao
+            if c+1 > len(tabela[expressao]): #adicionar apenas 1 valor por combinanação a cada variável ou subexpressao (no caso de encontar a mesma variável ou subexpressão mais de uma vez, ex (p ^ p) só armazena 1 p
                 tabela[expressao].append(valor)
 
-        if tabela[expressao][-1]==False:
-            tautologia=False
-            classificacao = 'contradição'
-        if tabela[expressao][-1]==True:
-            contradicao=False
-            classificacao = 'tautologia'
-    if not (contradicao or tautologia):
-        classificacao = 'contingência'
+        #ao fim do for, expressao armazena resultado final para a linha da tabela
+        if tabela[expressao][-1]==False: #se for falso em qualquer combinção
+            tautologia=False #não pode ser tautologia
+            classificacao = 'contradição' #assumir que é contradição
+        if tabela[expressao][-1]==True: #se for verdadeiro em qualquer combinaçaõ
+            contradicao=False #não pode ser contradiçao
+            classificacao = 'tautologia' #assumir que é tautologia
+    if not (contradicao or tautologia): #se não for nem tautologia nem contradição
+        classificacao = 'contingência' #só pode ser contingência
 
     return tabela, classificacao, tamanho
 
 # --------------------------- imprimir tabela verdade ---------------------------------------------------
 
-def organizar_dados(dados, variaveis):
-    organizados = {}
-    for i in variaveis:
+def organizar_dados(dados, variaveis): #caso as variáveis não sejam as primeiras chaves do dicionário tabela
+    #dados recebe o resultado[0] da função resolver, nomeado de tabela
+    organizados = {} #novo dicionário
+    for i in variaveis: #adicionar primeiro as variáveis
         organizados[i]=dados[i]
     for i in dados:
-        if i not in organizados:
+        if i not in organizados: #adicionar o resto das chaves
             organizados[i]=dados[i]
     return organizados
 
-def tabela(posfixos, proposicao):
+def tabela(posfixos, proposicao): #imprimi tabela e retorna o tamanho da largura da tabela imprimida
     variaveis = extrair_variaveis(posfixos)
     dados = organizar_dados(resolver(posfixos)[0], variaveis)
 
-    #trocar a ultima subexpressao pela proposição original (a reconstruida não considera parenteses)
-    chaves = list(dados.keys())
-    dados[proposicao] = dados.pop(chaves[-1])
+    chaves = list(dados.keys()) #variáveis, subexpressões e expressão final
+    dados[proposicao] = dados.pop(chaves[-1]) #trocar a ultima subexpressao pela proposição original (a reconstruida não é igual pois não considera parenteses)
 
+    #------------ tamanho da tabela horizontalmente -----------------------------------
     tamanho = resolver(posfixos)[2]
-
     if tamanho > 40: #se o tamanho da linha de cabeçário for mt grande, remover subsexpressoes
         for i in range(len(dados)-1): #remover chaves que não forem variáveis ou que não forem a ultima(proposição final)
             if chaves[i] not in variaveis:
                 dados.pop(chaves[i])
                 tamanho -= len(chaves[i])
-
     if tamanho > 100: #se mesmo removendo as subexpressoes, o cabeçário ainda for mt grande
         print('proposição muito grande para formar tabela')
         return False
 
-    largura = (tamanho+len(dados)*4)
+    largura = (tamanho+len(dados)*4) #cada chave tem 2 espaços e 2 b | nas extremidades
     if largura <= 50:
-        base = 50
+        base = 50 #fazer a tabela com 50 mesmo se for menor
     else:
-        base = largura
+        base = largura #se for maior que 50, usar a largura real
 
-    print(f' gerador de tabelas verdade '.upper().center(base, '='))
-    print('-'*base)
+    #------------------- imprimir tabela -------------------------
+    print(f' gerador de tabelas verdade '.upper().center(base, '=')) #título alinhado ao centro com a largura da tabela
+    print('-'*base) #separador do tamanho da largura da tabela
 
-    resultado =f'classificação: {resolver(posfixos)[1].upper()}'
-    espaco_entre = base - len(resultado)-len(proposicao)
-    if espaco_entre < 4:
-        print(proposicao)
+    resultado = f'classificação: {resolver(posfixos)[1].upper()}' #classificação
+    espaco_entre = base - len(resultado)-len(proposicao) #espaço entre o resultado e proposição delimitados pela largura da tabela
+    if espaco_entre < 4: #se o espaço for menor que 4
+        print(proposicao) #imprimir proposição e resultado em linhas separadas
         print(resultado)
-    else:
-        print(f"{proposicao}{' '*espaco_entre}{resultado}")
-
-    print('-'*base)
+    else: #se for maior que 4
+        print(f"{proposicao}{' '*espaco_entre}{resultado}") #imprimir proposiçaõ e resultado na mesma linha, separadas pelo espaço restante da ocupação delas na largura da célula
+    print('-'*base) #separador
 
     for chave in dados:
-        print(f'| {chave} |', end='')
+        print(f'| {chave} |', end='') #cabeçario da tabela
     print('')
 
-    for i in range(len(dados[variaveis[0]])):
-        for j in dados:
-            match dados[j][i]:
+    for i in range(len(dados[variaveis[0]])): #para cada combinação
+        for j in dados: #para cada chave (variável, subexpressao, proposição original)
+            match dados[j][i]: #encontrar valor e atribuir representação
                 case True:
                     valor = 'V'
                 case False:
