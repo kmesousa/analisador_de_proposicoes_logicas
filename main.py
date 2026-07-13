@@ -3,7 +3,7 @@ import os
 
 def clean():
   if os.name == 'nt':
-    _ = os.system('cls') 
+    _ = os.system('cls')
 
 #---------------- funcoes e dicionários ----------------------------------
 from dicsOperadores import dic_simbolos

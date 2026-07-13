@@ -128,7 +128,7 @@ def validar(tokens: list) -> bool:
 
             #verificar se o token atual aceita o tipo do proximo token
             if prox_tipo not in proximos_possiveis[atual_tipo]:
-                return False #"uso incorreto de tokens"
+                return False, f'{tokens[i]} não pode preceder {tokens[i+1]}' #lindo
 
         #paridade dos parenteses
         if tokens[i]=="(":
@@ -137,19 +137,19 @@ def validar(tokens: list) -> bool:
             counter_parentesis -= 1
 
         if counter_parentesis < 0: #parenteses fechando sem parenteses abrindo anteriormente
-            return False #"uso incorreto de parenteses"
+            return False, "uso incorreto de parenteses"
 
     if counter_parentesis !=0: #parenteses abrindo que nao foi fechado
-        return False #"uso incorreto de parenteses"
+        return False, "uso incorreto de parenteses"
 
     return True
 
-# print(validar(tokenizar("(p ^ q) ^ - q")))
-# print(validar(tokenizar("-q")))
-# print(validar(tokenizar("- -q")))
-# print(validar(tokenizar("- ^ q")))
-# print(validar(tokenizar("p ^ (-q)")))
-# print(validar(tokenizar("(p ^) q ")))
+print(validar(tokenizar("(p ^ q) ^ - q")))
+print(validar(tokenizar("-q")))
+print(validar(tokenizar("- -q")))
+print(validar(tokenizar("- ^ q")))
+print(validar(tokenizar("p ^ (-q)")))
+print(validar(tokenizar("(p ^) q ")))
 
 # ------------------- transformando tokens válidos em notação pos-fixa --------------------
 def posfixar(tokens:list) -> list:
