@@ -59,9 +59,6 @@ def tokenizar(proposicao:str) -> list: #recebe a formula proposicional lógica e
             i -=1 #voltar para o ultimo caractere do operador
 
         else: #identificar tokens que não são proposições, operadores nem auxiliadores
-            print(f"Proposição: {repr(proposicao)}")
-            print(f"Caractere inválido: {repr(proposicao[i])}")
-            print(f"Índice: {i}")
             return False, f'bad token: {proposicao[i]} at index {i}'
 
         i += 1
