@@ -68,31 +68,6 @@ def tokenizar(proposicao:str) -> list: #recebe a formula proposicional lógica e
     return tokens
 
 # ------------------- validando os tokens ------------------------------
-def parenteseses_certos(lista:list) -> bool:
-    #só verifica se eles estão pareados corretamente (não diz nada a respeito do posicionamento parenteses, operandos e operadores)
-
-    pilha1 = [] #( não pode conter elementos no final
-    pilha2 =[] #) não pode conter elementos caso a pilha 2 esteja vazia a qualquer momento
-
-    for i in range (0, len(lista)):
-        #1: direcionamento
-        if lista[i] == '(':
-            pilha1.append(lista[i])
-        elif lista[i] == ')':
-            pilha2.append(lista[i])
-
-        #2: pareamento
-        while len(pilha2)!=0 and len(pilha1)!=0: #fazer pares enquanto tiverem opcoes
-            del pilha1[0]
-            del pilha2[0]
-
-        #3: validadação
-        if len(pilha2)!=0:
-            return False
-    if pilha1!=[]:
-        return False
-    return True
-
 def validar(tokens: list) -> bool:
 
     counter_parentesis = 0 #verificar paridade dos parenteses
