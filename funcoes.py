@@ -73,43 +73,83 @@ def validar(tokens: list) -> bool:
     from dicsOperadores import dic_aridade, dic_simbolos
 
     #tipos de tokens
-    operando = 0
-
+    operando = "operando"
     operador_bi = []
     operador_uni = []
 
     #operadores separados por aridade
-    for i in dic_simbolos.keys():
-        if dic_aridade[i]==2:
+    for i in dic_simbolos:
+        if dic_aridade[dic_simbolos[i]]==2:
             operador_bi.append(dic_simbolos[i])
-        elif dic_aridade[i]==1:
+        elif dic_aridade[dic_simbolos[i]]==1:
             operador_uni.append(dic_simbolos[i])
+    operador_bi = tuple(operador_bi)
+    operador_uni = tuple(operador_uni)
 
+    tipos_tokens = ["(", ")", operador_uni, operador_bi, operando]
 
     proximos_possiveis = {
-        "(": ["(", ")", operando, operador_uni],
+        "(": ["(", ")", operador_uni, operando],
         ")": [")", operador_bi],
-        operador_uni: ["(", operando, operador_uni],
-        operador_bi: ["(", operando, operador_uni],
+        operador_uni: ["(", operador_uni, operando],
+        operador_bi: ["(", operador_uni, operando],
         operando: [")", operador_bi]
     }
 
     counter_parentesis = 0 #verificar paridade dos parenteses
+
+    def definir_tipo(elemento):
+        # for j in tipos_tokens:
+        #     print(type(j), j)
+        #print(f'elemento analisado: {elemento}')
+        for j in tipos_tokens:
+            #print(type(j), j, "procurando", elemento)
+            if type(j)==tuple:
+                #print(f'{j} é tuple')
+                for k in j:
+                    if elemento==k:
+                        tipo = j
+                        return tipo
+            elif j==elemento:
+                tipo = j
+                return tipo
+        tipo = operando
+        return tipo
+
     for i in range(len(tokens)):
 
-        #parridade dos parenteses
+        #definir o tipo do token atual
+        atual_tipo = definir_tipo(tokens[i])
+
+        if i + 1 < len(tokens): #se tem proximo token
+            #definir o tipo do proximo token
+            prox_tipo = definir_tipo(tokens[i+1])
+            #print(f'atual: {tokens[i]} {atual_tipo} \nprox: {tokens[i+1]} {prox_tipo}')
+
+            #verificar se o token atual aceita o tipo do proximo token
+            if prox_tipo not in proximos_possiveis[atual_tipo]:
+                return False #"uso incorreto de tokens"
+
+        #paridade dos parenteses
         if tokens[i]=="(":
             counter_parentesis += 1
         elif tokens[i]==")":
             counter_parentesis -= 1
 
         if counter_parentesis < 0: #parenteses fechando sem parenteses abrindo anteriormente
-            return False, "uso incorreto de parenteses"
+            return False #"uso incorreto de parenteses"
 
     if counter_parentesis !=0: #parenteses abrindo que nao foi fechado
-        return False, "uso incorreto de parenteses"
+        return False #"uso incorreto de parenteses"
 
     return True
+
+# print(validar(tokenizar("(p ^ q) ^ - q")))
+# print(validar(tokenizar("-q")))
+# print(validar(tokenizar("- -q")))
+# print(validar(tokenizar("- ^ q")))
+# print(validar(tokenizar("p ^ (-q)")))
+# print(validar(tokenizar("(p ^) q ")))
 
 # ------------------- transformando tokens válidos em notação pos-fixa --------------------
 def posfixar(tokens:list) -> list:
