@@ -70,6 +70,30 @@ def tokenizar(proposicao:str) -> list: #recebe a formula proposicional lógica e
 # ------------------- validando os tokens ------------------------------
 def validar(tokens: list) -> bool:
 
+    from dicsOperadores import dic_aridade, dic_simbolos
+
+    #tipos de tokens
+    operando = 0
+
+    operador_bi = []
+    operador_uni = []
+
+    #operadores separados por aridade
+    for i in dic_simbolos.keys():
+        if dic_aridade[i]==2:
+            operador_bi.append(dic_simbolos[i])
+        elif dic_aridade[i]==1:
+            operador_uni.append(dic_simbolos[i])
+
+
+    proximos_possiveis = {
+        "(": ["(", ")", operando, operador_uni],
+        ")": [")", operador_bi],
+        operador_uni: ["(", operando, operador_uni],
+        operador_bi: ["(", operando, operador_uni],
+        operando: [")", operador_bi]
+    }
+
     counter_parentesis = 0 #verificar paridade dos parenteses
     for i in range(len(tokens)):
 
@@ -79,10 +103,10 @@ def validar(tokens: list) -> bool:
         elif tokens[i]==")":
             counter_parentesis -= 1
 
-        if counter_parentesis < 0:
+        if counter_parentesis < 0: #parenteses fechando sem parenteses abrindo anteriormente
             return False, "uso incorreto de parenteses"
 
-    if counter_parentesis !=0:
+    if counter_parentesis !=0: #parenteses abrindo que nao foi fechado
         return False, "uso incorreto de parenteses"
 
     return True
