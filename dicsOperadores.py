@@ -48,25 +48,37 @@ dic_funcoes = {
 '''ai q preguiça da porra parece que eu vou ter q reestruturar tudo dnv aa'''
 
 def mudar_simbolos():
+    from interface import TAMANHO, sep
     novos_simbolos = {}
+    trocou = False
 
-    print("Digite o novo símbolo para cada operador (ENTER para manter o atual).\n")
+    print("digite o novo símbolo para cada operador \n(ENTER para manter o atual).")
+    sep()
     for nome, simbolo_atual in dic_simbolos.items():
-        novo = input(f"{nome} (atual: '{simbolo_atual}'): ").strip()
+        novo = input(f"{nome} [{simbolo_atual}]: ").strip()
+        if novo!='':
+            trocou = True
         novos_simbolos[nome] = novo if novo else simbolo_atual
+    sep()
 
-    if len(set(novos_simbolos.values())) != len(novos_simbolos):
-        print("\nErro: dois operadores não podem usar o mesmo símbolo. Nada foi alterado.")
+    if trocou:
+        if len(set(novos_simbolos.values())) != len(novos_simbolos):
+            print("\nErro: dois operadores não podem usar o mesmo símbolo. \nNada foi alterado.")
+            sep()
+            return
+
+        dic_simbolos.clear()
+        dic_simbolos.update(novos_simbolos)
+
+        dic_id.clear()
+        dic_id.update({simbolo: nome for nome, simbolo in dic_simbolos.items()})
+
+        operadores.clear()
+        operadores.extend(dic_simbolos.values())
+
+        print("símbolos atualizados com sucesso!")
+        sep()
         return
-
-    dic_simbolos.clear()
-    dic_simbolos.update(novos_simbolos)
-
-    dic_id.clear()
-    dic_id.update({simbolo: nome for nome, simbolo in dic_simbolos.items()})
-
-    operadores.clear()
-    operadores.extend(dic_simbolos.values())
-
-    print("\nSímbolos atualizados com sucesso!")
-    print(dic_simbolos)
+    print("nada foi alterado.")
+    sep()
+    #print(dic_simbolos)

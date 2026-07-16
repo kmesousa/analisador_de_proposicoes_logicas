@@ -12,15 +12,8 @@ def limpar_tela():
   if os.name == 'nt':
     _ = os.system('cls')
 
-#---------------- menu principal -----------------------------------------
-def exibir_menu_inicial():
-    #--------------- cabeçário ----------------------------------
-    print(' GERADOR E CLASSIFICADOR DE TABELAS VERDADE '.center(TAMANHO, '='))
-    print('Lógica Proposicional'.center(TAMANHO))
-    print('Use os símbolos abaixo para montar expressões.'.center(TAMANHO))
-    sep()
 
-    #------------------ símbolos --------------------------------
+def exibir_simbolos():
     print('simbolos'.center(TAMANHO))
     sep()
     #imprimindo os simbolos dividos em duas colunas, uma ao lado da outra
@@ -41,6 +34,13 @@ def exibir_menu_inicial():
             print(f'[{dic_simbolos[chaves[i]]}] {chaves[i]}')
         i +=1
     sep()
+
+def exibir_menu_inicial():
+    print(' GERADOR E CLASSIFICADOR DE TABELAS VERDADE '.center(TAMANHO, '='))
+    print('Lógica Proposicional'.center(TAMANHO))
+    print('Use os símbolos abaixo para montar expressões.'.center(TAMANHO))
+    sep()
+    exibir_simbolos()
 
 def pedir_proposição ():
     print('digite a fórmula proposicional OU digite: ')

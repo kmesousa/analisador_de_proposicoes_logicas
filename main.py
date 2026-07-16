@@ -19,6 +19,7 @@ def main():
                 break
             case 'trocar':
                 dicsOperadores.mudar_simbolos()
+                opcao = interface.perguntar_continuar().strip().lower()
             case _:
                 proposicao = opcao
                 tokens = funcoes.tokenizar(proposicao)
@@ -26,6 +27,8 @@ def main():
                     erro = True
                     continue
 
+                interface.limpar_tela()
+                interface.exibir_simbolos()
                 funcoes.tabela(funcoes.posfixar(tokens), proposicao)
                 opcao = interface.perguntar_continuar().strip().lower()
 
