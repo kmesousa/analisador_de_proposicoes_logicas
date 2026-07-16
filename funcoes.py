@@ -134,7 +134,7 @@ def validar(tokens: list) -> bool:
     if counter_parentesis !=0: #parenteses abrindo que nao foi fechado
         return False, "uso incorreto de parenteses"
 
-    return True
+    return True, "válido"
 
 # ------------------- 2 CONVERTENDO EM NOTAÇÃO POS FIXA --------------------
 def posfixar(tokens:list) -> list:
@@ -160,7 +160,7 @@ def posfixar(tokens:list) -> list:
                     pilha.append(tokens[i])
 
                 elif dic_precedencia[dic_id[tokens[i]]] < dic_precedencia[dic_id[pilha[-1]]]: #se a precedencia do atual for menor
-                    while pilha!=[] and dic_precedencia[dic_id[tokens[i]]] <= dic_precedencia[dic_id[pilha[-1]]]: #enquanto a pilha nao esta vazia e a precedencia do atual for menor doq a do ultimo da pilha
+                    while pilha!=[] and pilha[-1]!='(' and dic_precedencia[dic_id[tokens[i]]] <= dic_precedencia[dic_id[pilha[-1]]]: #enquanto a pilha nao esta vazia e a precedencia do atual for menor doq a do ultimo da pilha
                         npf.append(pilha.pop()) #remove o operador da pilha e adiciona na lista posfixa
                     pilha.append(tokens[i]) #adiciona o operador atual a pilha
 
