@@ -79,9 +79,9 @@ def validar(tokens: list) -> bool:
 
     #operadores separados por aridade
     for i in dic_simbolos:
-        if dic_aridade[dic_simbolos[i]]==2:
+        if dic_aridade[i]==2:
             operador_bi.append(dic_simbolos[i])
-        elif dic_aridade[dic_simbolos[i]]==1:
+        elif dic_aridade[i]==1:
             operador_uni.append(dic_simbolos[i])
     operador_bi = tuple(operador_bi)
     operador_uni = tuple(operador_uni)
@@ -99,13 +99,8 @@ def validar(tokens: list) -> bool:
     counter_parentesis = 0 #verificar paridade dos parenteses
 
     def definir_tipo(elemento):
-        # for j in tipos_tokens:
-        #     print(type(j), j)
-        #print(f'elemento analisado: {elemento}')
         for j in tipos_tokens:
-            #print(type(j), j, "procurando", elemento)
             if type(j)==tuple:
-                #print(f'{j} é tuple')
                 for k in j:
                     if elemento==k:
                         tipo = j
@@ -118,16 +113,13 @@ def validar(tokens: list) -> bool:
 
     for i in range(len(tokens)):
 
-        #definir o tipo do token atual
-        atual_tipo = definir_tipo(tokens[i])
+        atual_tipo = definir_tipo(tokens[i]) #definir o tipo do token atual
 
         if i + 1 < len(tokens): #se tem proximo token
-            #definir o tipo do proximo token
-            prox_tipo = definir_tipo(tokens[i+1])
+            prox_tipo = definir_tipo(tokens[i+1]) #definir o tipo do proximo token
             #print(f'atual: {tokens[i]} {atual_tipo} \nprox: {tokens[i+1]} {prox_tipo}')
 
-            #verificar se o token atual aceita o tipo do proximo token
-            if prox_tipo not in proximos_possiveis[atual_tipo]:
+            if prox_tipo not in proximos_possiveis[atual_tipo]: #verificar se o token atual aceita o tipo do proximo token
                 return False, f'{tokens[i]} não pode preceder {tokens[i+1]}' #lindo
 
         #paridade dos parenteses
@@ -144,16 +136,9 @@ def validar(tokens: list) -> bool:
 
     return True
 
-print(validar(tokenizar("(p ^ q) ^ - q")))
-print(validar(tokenizar("-q")))
-print(validar(tokenizar("- -q")))
-print(validar(tokenizar("- ^ q")))
-print(validar(tokenizar("p ^ (-q)")))
-print(validar(tokenizar("(p ^) q ")))
-
-# ------------------- transformando tokens válidos em notação pos-fixa --------------------
+# ------------------- 2 CONVERTENDO EM NOTAÇÃO POS FIXA --------------------
 def posfixar(tokens:list) -> list:
-    from dicsOperadores import dic_precedencia, operadores
+    from dicsOperadores import dic_precedencia, dic_id, operadores
     aux = ['(',')']
     npf = [] #receber notação pos fixa
     pilha = []
@@ -163,21 +148,21 @@ def posfixar(tokens:list) -> list:
             npf.append(tokens[i])
 
         elif tokens[i] in operadores: #operadores deve checar
-                    if pilha==[]: #se a pilha está vazia, adiciona
-                        pilha.append(tokens[i])
-                    else: #pilha!=[]
-                        if pilha[-1]=='(': #nunca vai ser ), só adiciona a pilha normalmente
-                            pilha.append(tokens[i])
-                        elif dic_precedencia[tokens[i]] > dic_precedencia[pilha[-1]]: #se a pilha tiver um operador, deve comparar a precedencia deles
-                            pilha.append(tokens[i]) #se o atual tiver maior precedencia, adiciona
+            if pilha==[]: #se a pilha está vazia, adiciona
+                pilha.append(tokens[i])
+            else: #pilha!=[]
+                if pilha[-1]=='(': #nunca vai ser ), só adiciona a pilha normalmente
+                    pilha.append(tokens[i])
+                elif dic_precedencia[dic_id[tokens[i]]] > dic_precedencia[dic_id[pilha[-1]]]: #se a pilha tiver um operador, deve comparar a precedencia deles
+                    pilha.append(tokens[i]) #se o atual tiver maior precedencia, adiciona
 
-                        elif dic_precedencia[tokens[i]] == dic_precedencia[pilha[-1]]: #se tiverem a mesma precedencia, adiciona
-                            pilha.append(tokens[i])
+                elif dic_precedencia[dic_id[tokens[i]]] == dic_precedencia[dic_id[pilha[-1]]]: #se tiverem a mesma precedencia, adiciona
+                    pilha.append(tokens[i])
 
-                        elif dic_precedencia[tokens[i]] < dic_precedencia[pilha[-1]]: #se a precedencia do atual for menor
-                            while pilha!=[] and dic_precedencia[tokens[i]] <= dic_precedencia[pilha[-1]]: #enquanto a pilha nao esta vazia e a precedencia do atual for menor doq a do ultimo da pilha
-                                npf.append(pilha.pop()) #remove o operador da pilha e adiciona na lista posfixa
-                            pilha.append(tokens[i]) #adiciona o operador atual a pilha
+                elif dic_precedencia[dic_id[tokens[i]]] < dic_precedencia[dic_id[pilha[-1]]]: #se a precedencia do atual for menor
+                    while pilha!=[] and dic_precedencia[dic_id[tokens[i]]] <= dic_precedencia[dic_id[pilha[-1]]]: #enquanto a pilha nao esta vazia e a precedencia do atual for menor doq a do ultimo da pilha
+                        npf.append(pilha.pop()) #remove o operador da pilha e adiciona na lista posfixa
+                    pilha.append(tokens[i]) #adiciona o operador atual a pilha
 
         elif tokens[i]=='(':
             pilha.append(tokens[i])
@@ -193,6 +178,7 @@ def posfixar(tokens:list) -> list:
 
     return npf
 
+# ----------------------------------------- 3 RESOLVENDO  --------------------
 # ------------------- gerando combinações para as variáveis --------------------
 def extrair_variaveis(posfixos) -> list: #extrair as variaveis dos posfixos
     from dicsOperadores import operadores
@@ -236,7 +222,7 @@ def gerar_combinacoes(variaveis):
 #--------------- resolução da expressão com os valores dados nas combinações ------------------
 
 def resolver(posfixas):
-    from dicsOperadores import operadores, dic_aridade, dic_funcoes
+    from dicsOperadores import operadores, dic_aridade, dic_funcoes, dic_id
 
     variaveis = extrair_variaveis(posfixas) #execulta a função de extrair variáveis
     combinacoes = gerar_combinacoes(variaveis) #gera a combinação das variáveis
@@ -256,15 +242,15 @@ def resolver(posfixas):
                 expressao = posfixas[i] #armazena a variável
                 valor = combinacoes[c][posfixas[i]] #armazena o valor da variável na combinação atual
             elif posfixas[i] in operadores: #se encontar um operador, deve verificar a arridade
-                if dic_aridade[posfixas[i]]==1: #se for operador unitário (arridade 1, infere sobre apenas 1 operando)
+                if dic_aridade[dic_id[posfixas[i]]]==1: #se for operador unitário (arridade 1, infere sobre apenas 1 operando)
                     op = pilha.pop() #o operando é o ultimo da pilha de operandos
                     expressao = f'{posfixas[i]} {op[0]}' #a subexpressão é o operador a esquerda e o operando a direita
-                    valor = dic_funcoes[posfixas[i]](op[1]) #o valor é a função do operando sobre o operador
+                    valor = dic_funcoes[dic_id[posfixas[i]]](op[1]) #o valor é a função do operando sobre o operador
                 else: #se for operador binário (infere sobre 2 operandos, não suporta operadores com arridade > 2)
                     rhs = pilha.pop() #o operando da direita é o ultimo da pilha
                     lhs = pilha.pop() #o operando da esquerda é o penultimo da pilha (agora o ulitmo, depois da remoção do rhs)
                     expressao = f'{lhs[0]} {posfixas[i]} {rhs[0]}' #a expressão é o operando da esquerda, operador, opr da direita
-                    valor = dic_funcoes[posfixas[i]](lhs[1],rhs[1]) #o valor a função do operado sobre os operandos da esqueda e direita
+                    valor = dic_funcoes[dic_id[posfixas[i]]](lhs[1],rhs[1]) #o valor a função do operado sobre os operandos da esqueda e direita
             pilha.append((expressao, valor)) #armazena expressão(variável, subexpressão ou expressao final reconstruida) e valor
 
             if expressao not in tabela: #tabela irá armazenar um dicionário
@@ -298,6 +284,8 @@ def organizar_dados(dados, variaveis): #caso as variáveis não sejam as primeir
     return organizados
 
 def tabela(posfixos, proposicao): #imprimi tabela e retorna o tamanho da largura da tabela imprimida
+    from interface import TAMANHO
+
     variaveis = extrair_variaveis(posfixos)
     dados = organizar_dados(resolver(posfixos)[0], variaveis)
 
