@@ -294,18 +294,18 @@ def tabela(posfixos, proposicao): #imprimi tabela e retorna o tamanho da largura
 
     #------------ tamanho da tabela horizontalmente -----------------------------------
     tamanho = resolver(posfixos)[2]
-    if tamanho > 40: #se o tamanho da linha de cabeçário for mt grande, remover subsexpressoes
+    if tamanho > TAMANHO-10: #se o tamanho da linha de cabeçário for mt grande, remover subsexpressoes
         for i in range(len(dados)-1): #remover chaves que não forem variáveis ou que não forem a ultima(proposição final)
             if chaves[i] not in variaveis:
                 dados.pop(chaves[i])
                 tamanho -= len(chaves[i])
-    if tamanho > 100: #se mesmo removendo as subexpressoes, o cabeçário ainda for mt grande
+    if tamanho > TAMANHO*2: #se mesmo removendo as subexpressoes, o cabeçário ainda for mt grande
         print('proposição muito grande para formar tabela')
         return False
 
     largura = (tamanho+len(dados)*4) #cada chave tem 2 espaços e 2 b | nas extremidades
-    if largura <= 50:
-        base = 50 #fazer a tabela com 50 mesmo se for menor
+    if largura <= TAMANHO:
+        base = TAMANHO #fazer a tabela com 50 mesmo se for menor
     else:
         base = largura #se for maior que 50, usar a largura real
 
