@@ -12,7 +12,7 @@ def main():
         if erro:
             interface.mostrar_erro(tokens)
         if not opcao:
-            opcao = interface.pedir_proposição().strip()
+            opcao = interface.pedir_proposição().strip().lower()
 
         match opcao:
             case 'sair':
@@ -27,7 +27,7 @@ def main():
                     continue
 
                 funcoes.tabela(funcoes.posfixar(tokens), proposicao)
-                opcao = interface.perguntar_continuar().strip()
+                opcao = interface.perguntar_continuar().strip().lower()
 
     interface.limpar_tela()
     interface.exibir_menu_final()
