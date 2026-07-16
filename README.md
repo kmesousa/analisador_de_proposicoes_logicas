@@ -16,7 +16,7 @@ O programa está estruturado em 3 arquivos principais:
 #### 3. main.py
 - Oferece a interface para o usuário final, utilizando das funções e dicionários criados anteriormente
 
-## Como usar o programa 
+## Como usar o programa
 - Resquisitos: Python 3.9
 
 **Passo a passo**
@@ -34,7 +34,7 @@ O programa está estruturado em 3 arquivos principais:
 - O programa não suporta fórmulas do tipo **"pão e não queijo"**
 - O programa não verifica ou oferece equivalência entre fórmulas
 - O programa não permite a troca dos símbolos usados como operadores
-- O programa não suporta mais de cinco operadores 
+- O programa não suporta mais de cinco operadores
 
 **Observação:**
 A implementação dos dois últimos items demanada atualizações mínimas e foi pensada na escalabilidade do programa.
