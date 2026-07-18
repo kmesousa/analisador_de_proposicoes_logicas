@@ -199,23 +199,15 @@ def gerar_combinacoes(variaveis):
     for i in range(qte_combinacoes):
         combinacoes[i]={} #cada item da lista de combinações vira um dicionário vazio para receber a combinação
 
-    valores = (True, False) #valores que a variável pode receber
-
     #qte e tamanho de blocos por variável
     for v in range(len(variaveis)):
         blocos = 2**(v+1) #quantas repartições a variável faz entre TRUE e FALSE (blocos = seção de combinações de 1 variável)
-        inicio_bloco = 0
-        fim_bloco = inicio_bloco + qte_combinacoes//blocos #tamanho do bloco é a quantidade de combinações // qte de blocos
+        tam_bloco = qte_combinacoes//blocos
 
         #atribuindo valores aos blocos
-        for i in range(blocos):
-            valor = valores[i%2] #alternar entre TRUE e FALSE para cada bloco
+        for i in range(qte_combinacoes):
+            combinacoes[i][variaveis[v]] = not bool((i//tam_bloco)%2)
 
-            #colocando o valor na variável e no dicionário
-            for j in range(inicio_bloco, fim_bloco): #para o bloco inteiro de combinações a variavel recebe o mesmo valor
-                combinacoes[j][variaveis[v]] = valor #coloca a variável na combição
-            inicio_bloco = fim_bloco #começa um novo bloco a partir do fim do anterior
-            fim_bloco += qte_combinacoes//blocos #define o fim do bloco a partir de seu tamanho
     #tipo de return: [{'p': True, 'q': True}, {'p': True, 'q': False}, {'p': False, 'q': True}, {'p': False, 'q': False}]
     return combinacoes
 
